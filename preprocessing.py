@@ -21,7 +21,7 @@ def preprocess_data(df):
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("../data/raw/heart_disease.csv")
+    df = pd.read_csv("../data/raw/heart_disease_uci.csv")
     processed_df = preprocess_data(df)
 
     print(processed_df.head())
