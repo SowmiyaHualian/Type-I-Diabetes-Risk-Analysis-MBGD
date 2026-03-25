@@ -43,9 +43,6 @@ users.xlsx
 *.xlsx
 *.csv
 
-# Models
-models/*.pkl
-
 # Cache
 .pytest_cache/
 .coverage
