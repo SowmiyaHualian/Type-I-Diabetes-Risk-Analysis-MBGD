@@ -356,7 +356,8 @@ def logout():
 def main():
     # Get port from environment variable (for Render deployment) or find free port (local development)
     port = int(os.getenv("PORT", find_free_port()))
-    is_production = os.getenv("FLASK_ENV") == "production"
+    # Check if PORT is set (Render) or if FLASK_ENV is production - both indicate cloud deployment
+    is_production = bool(os.getenv("PORT")) or os.getenv("FLASK_ENV") == "production"
     host = "0.0.0.0" if is_production else "127.0.0.1"
     
     url = f"http://{host}:{port}"
