@@ -13,7 +13,9 @@ from flask import Flask, redirect, render_template, render_template_string, requ
 
 from predict import predict_risk
 
-app = Flask(__name__, static_folder="frontend", template_folder="frontend")
+# Use absolute paths based on the module location
+APP_DIR = Path(__file__).parent
+app = Flask(__name__, static_folder=str(APP_DIR / "frontend"), template_folder=str(APP_DIR / "frontend"))
 app.secret_key = os.getenv("SECRET_KEY", "secret123")  # Use environment variable in production
 
 
@@ -38,7 +40,7 @@ def require_login():
 # -----------------
 # User persistence
 # -----------------
-USERS_FILE = Path("users.xlsx")
+USERS_FILE = APP_DIR / "users.xlsx"
 
 
 def load_users() -> pd.DataFrame:
@@ -57,7 +59,7 @@ def save_users(df: pd.DataFrame) -> None:
 # -------------------------
 # Patient record persistence
 # -------------------------
-PATIENT_RECORDS_FILE = Path("patient_records.xlsx")
+PATIENT_RECORDS_FILE = APP_DIR / "patient_records.xlsx"
 PATIENT_RECORD_COLUMNS = [
     "Record_ID",
     "Timestamp",

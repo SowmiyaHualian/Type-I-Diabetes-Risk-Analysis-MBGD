@@ -7,7 +7,9 @@ import joblib
 import numpy as np
 import pandas as pd
 
-MODEL_PATH = Path("models/t1d_logreg_mb.pkl")
+# Use absolute path based on the module location, not working directory
+MODULE_DIR = Path(__file__).parent
+MODEL_PATH = MODULE_DIR / "models" / "t1d_logreg_mb.pkl"
 
 RISK_BUCKETS = [
     (0.7, "strong", "Multiple strong indicators associated with early signs of Type 1 Diabetes have been identified. This may require immediate medical attention."),
