@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Early Risk Analysis of Type 1 Diabetes</title>
+    <script>
+      tailwind = {
+        config: {
+          theme: {
+            extend: {
+              colors: {
+                darkTeal: '#083A40',
+                primaryTeal: '#0F6C74',
+                lightTeal: '#3AB8C1',
+                accentTeal: '#2FA5AD',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body class="bg-white" data-server-auth="{{ 'true' if session.get('user') else 'false' }}" data-user-name="{{ session.get('user').get('name') if session.get('user') else '' }}" data-user-email="{{ session.get('user').get('email') if session.get('user') else '' }}">
+    <div id="navbar"></div>
+
+    <main class="min-h-screen bg-white relative overflow-hidden flex items-center justify-center">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute inset-x-0 top-0 h-[320px] bg-gradient-to-br from-[#0F6C74] via-[#147E86] to-[#3AB8C1]"></div>
+        <div
+          class="absolute inset-x-0 top-0 h-[320px] opacity-[0.07]"
+          style="background-image: linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px); background-size: 70px 70px;"
+        ></div>
+        <div class="absolute inset-x-0 top-[240px] h-44 bg-gradient-to-b from-transparent to-white"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.72)_0%,_rgba(255,255,255,0.45)_45%,_rgba(255,255,255,0.2)_70%)]"></div>
+
+        <!-- Watermark medical illustrations -->
+        <div class="absolute top-24 left-[12%] opacity-10 animate-float">
+          <svg class="w-[72px] h-[72px] text-white" fill="none" stroke="currentColor" viewBox="0 0 64 64" stroke-width="2">
+            <path d="M16 12c10 8 10 16 0 24" stroke-linecap="round" />
+            <path d="M28 12c10 8 10 16 0 24" stroke-linecap="round" />
+            <path d="M40 12c10 8 10 16 0 24" stroke-linecap="round" />
+            <path d="M20 16h18M18 24h22M18 32h22" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="absolute bottom-24 right-[12%] opacity-10 animate-float-slow" style="animation-delay: 1s;">
+          <svg class="w-24 h-24 text-white" fill="none" stroke="currentColor" viewBox="0 0 72 72" stroke-width="2">
+            <polyline points="6,42 18,42 26,26 36,56 44,32 54,50 64,40 70,40" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div class="absolute top-10 right-[18%] opacity-10 animate-float" style="animation-delay: 2s;">
+          <svg class="w-[72px] h-[72px] text-[#E6F7F9]" fill="none" stroke="currentColor" viewBox="0 0 64 64" stroke-width="1.8">
+            <rect x="10" y="10" width="44" height="44" rx="10" ry="10" />
+            <path d="M32 18v28M18 32h28" stroke-linecap="round" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="relative z-10 w-full max-w-md px-4 pt-16">
+        <div class="animate-slide-up">
+          <div class="bg-white border border-slate-200 rounded-[28px] p-8 shadow-soft">
+            <div class="flex justify-center mb-6">
+              <div class="relative">
+                <div class="absolute inset-0 bg-[#0F6C74]/10 rounded-full blur-xl scale-150"></div>
+                <div class="relative bg-gradient-to-br from-[#F5FBFC] to-[#E8F5F7] p-4 rounded-full border border-[#0F6C74]/20">
+                  <img src="https://i.ebayimg.com/images/g/SCsAAOSwOwJjapHJ/s-l400.jpg" alt="Caduceus Logo" class="w-14 h-14 rounded-full object-cover" />
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center mb-8">
+              <h2 class="text-3xl font-bold text-[#083A40] mb-1">Welcome Back</h2>
+              <p class="text-slate-500 text-sm">Access your clinical research workspace</p>
+            </div>
+
+            <form id="login-form" class="space-y-5" method="post" action="{{ url_for('login') }}" data-server-post="true">
+              <div>
+                <label for="email" class="block text-sm font-medium text-[#374151] mb-2">Email Address</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                  </div>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    class="w-full bg-white border border-slate-200 rounded-xl py-3 pl-12 pr-4 text-[#111827] placeholder-slate-400 focus:outline-none focus:border-[#0F6C74] focus:ring-4 focus:ring-[#0F6C74]/12 transition-all duration-300"
+                    placeholder="you@example.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="password" class="block text-sm font-medium text-[#374151] mb-2">Password</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                    </svg>
+                  </div>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    class="w-full bg-white border border-slate-200 rounded-xl py-3 pl-12 pr-4 text-[#111827] placeholder-slate-400 focus:outline-none focus:border-[#0F6C74] focus:ring-4 focus:ring-[#0F6C74]/12 transition-all duration-300"
+                    placeholder="********"
+                  />
+                </div>
+              </div>
+
+              <div id="login-error" class="{% if error %}{% else %}hidden {% endif %}bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm shadow-sm">{{ error or '' }}</div>
+              
+
+              <button
+                type="submit"
+                class="w-full py-3 bg-[#0F6C74] text-white font-semibold rounded-xl transition-all duration-300 hover:bg-[#084A52] hover:shadow-lg hover:shadow-[#0F6C74]/30 active:translate-y-0"
+              >
+                Login
+              </button>
+            </form>
+
+            <div class="mt-6 text-center">
+              <p class="text-slate-500 text-sm">
+                Don't have an account?
+                <a href="register.html" class="text-[#0F6C74] hover:text-[#084A52] font-medium transition-colors duration-300">Create account</a>
+              </p>
+            </div>
+          </div>
+
+          <p class="text-center text-slate-500 text-xs mt-6">
+            Early Risk Analysis of Type 1 Diabetes - Secure Medical AI Platform
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+      window.App.initPage();
+    </script>
+  </body>
+</html>

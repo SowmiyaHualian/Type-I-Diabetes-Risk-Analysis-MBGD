@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact - Early Risk Analysis of Type 1 Diabetes</title>
+    <script>
+      tailwind = {
+        config: {
+          theme: {
+            extend: {
+              colors: {
+                darkTeal: '#083A40',
+                primaryTeal: '#0F6C74',
+                lightTeal: '#3AB8C1',
+                accentTeal: '#2FA5AD',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body class="bg-white" data-server-auth="{{ 'true' if session.get('user') else 'false' }}" data-user-name="{{ session.get('user').get('name') if session.get('user') else '' }}" data-user-email="{{ session.get('user').get('email') if session.get('user') else '' }}">
+    <div id="navbar"></div>
+
+    <main class="min-h-screen bg-white pt-24 pb-20">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div class="text-center mb-8">
+          <div class="flex justify-center mb-6">
+            <div class="p-4 rounded-2xl bg-[#0F6C74]/10 border border-[#0F6C74]/30">
+              <img src="https://i.ebayimg.com/images/g/SCsAAOSwOwJjapHJ/s-l400.jpg" alt="Caduceus Logo" class="w-12 h-12 rounded-full object-cover" />
+            </div>
+          </div>
+          <h1 class="text-5xl font-bold text-[#083A40] mb-4">Contact Information</h1>
+          <div class="w-16 h-1 bg-[#0F6C74] mx-auto rounded-full"></div>
+        </div>
+      </div>
+
+      <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-2xl border border-slate-200 p-10 shadow-soft">
+          <p class="text-center text-slate-600 mb-12">
+            Have questions or feedback about the system? Please reach out to us using the contact information below.
+          </p>
+
+          <div class="space-y-8">
+            <div>
+              <h2 class="text-xl font-bold text-[#083A40] mb-6 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-[#0F6C74] flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                Email
+              </h2>
+              <div class="space-y-4 ml-13">
+                <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                  <p class="text-slate-600 text-sm mb-1">Contact</p>
+                  <a href="mailto:joananancys@gmail.com" class="text-lg font-semibold text-[#0F6C74] hover:text-[#084A52] transition-colors">
+                    joananancys@gmail.com
+                  </a>
+                </div>
+                <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                  <p class="text-slate-600 text-sm mb-1">Contact</p>
+                  <a href="mailto:sowmi.ms08@gmail.com" class="text-lg font-semibold text-[#0F6C74] hover:text-[#084A52] transition-colors">
+                    sowmi.ms08@gmail.com
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 class="text-xl font-bold text-[#083A40] mb-6 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-[#3AB8C1] flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 00.948.684l1.498 4.493a1 1 0 00.502.756l2.73 1.365a1 1 0 001.27-1.27L13.596 9l2.023.5a1 1 0 00.756-.502l4.493-1.498a1 1 0 00.684-.948V5a2 2 0 00-2-2h-2.82a2 2 0 00-1.961 1.41l-1.83 6.692a2 2 0 01-.949 1.179l-2.665 1.332a2 2 0 01-2.24-2.236l.582-2.327a2 2 0 00-.331-1.873L3.26 9.620a2 2 0 00-3.738 2.068l6.46 4.873A2 2 0 009 17.25V19a2 2 0 002 2 15.064 15.064 0 002.21-.338l2.948-.52a2 2 0 001.926-2.021l.06-1.506a2 2 0 00-.422-1.491l-1.745-2.493" />
+                  </svg>
+                </div>
+                Phone
+              </h2>
+              <div class="space-y-4 ml-13">
+                <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                  <p class="text-slate-600 text-sm mb-1">Contact</p>
+                  <a href="tel:+919486137838" class="text-lg font-semibold text-[#3AB8C1] hover:text-[#2FA5AD] transition-colors">
+                    +91 94861 37838
+                  </a>
+                </div>
+                <div class="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                  <p class="text-slate-600 text-sm mb-1">Contact</p>
+                  <a href="tel:+919025445475" class="text-lg font-semibold text-[#3AB8C1] hover:text-[#2FA5AD] transition-colors">
+                    +91 90254 45475
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-12 pt-8 border-t border-slate-200">
+            <p class="text-center text-slate-600">
+              We typically respond to inquiries within 24-48 hours. Thank you for your interest in our system.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-16 max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h3 class="text-xl font-bold text-[#083A40] mb-6">Need Help?</h3>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="about.html" class="px-6 py-3 bg-white border-2 border-[#0F6C74] text-[#0F6C74] font-semibold rounded-lg hover:bg-[#0F6C74]/5 transition-all">
+              Learn About the System
+            </a>
+            <a href="dashboard.html" class="px-6 py-3 bg-[#0F6C74] text-white font-semibold rounded-lg hover:bg-[#084A52] transition-all">
+              Go to Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+      window.App.initPage();
+    </script>
+  </body>
+</html>

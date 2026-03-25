@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Result - Early Risk Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body class="bg-[#F5F7F8] min-h-screen">
+    <header class="bg-[#083A40] text-white shadow-sm">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="{{ url_for('landing') }}" class="font-semibold">Early Risk Analysis</a>
+        <div class="flex items-center gap-3">
+          <a href="{{ url_for('dashboard') }}" class="px-3 py-2 rounded-lg bg-white text-[#0F6C74] font-semibold">Back to dashboard</a>
+          <a href="{{ url_for('logout') }}" class="px-3 py-2 rounded-lg bg-white text-[#0F6C74] font-semibold">Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-soft p-6 lg:p-8 space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Result</p>
+            <h1 class="text-2xl font-bold text-[#083A40]">Model Output</h1>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-[#083A40]/10 text-[#083A40] text-xs font-semibold">JSON response rendered</span>
+        </div>
+        {% if result %}
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="p-4 rounded-xl bg-[#0F6C74]/5 border border-[#0F6C74]/20">
+            <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Risk level</p>
+            <p class="text-2xl font-bold text-[#083A40]">{{ result.risk_level }}</p>
+          </div>
+          <div class="p-4 rounded-xl bg-[#3AB8C1]/5 border border-[#3AB8C1]/20">
+            <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Probability</p>
+            <p class="text-2xl font-bold text-[#0F6C74]">{{ (result.probability * 100) | round(1) }}%</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-100 border border-slate-200">
+            <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Model used</p>
+            <p class="text-2xl font-bold text-[#083A40]">{{ 'Yes' if result.used_model else 'Fallback' }}</p>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-white border border-slate-200">
+          <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Recommendation</p>
+          <p class="mt-2 text-slate-700 leading-relaxed">{{ result.recommendation }}</p>
+        </div>
+        {% else %}
+        <p>No result to display.</p>
+        {% endif %}
+      </div>
+    </main>
+  </body>
+</html>

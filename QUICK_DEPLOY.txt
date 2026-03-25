@@ -1,0 +1,111 @@
+# RENDER DEPLOYMENT - QUICK START
+
+## 🚀 Deploy in 5 Minutes!
+
+### Step 1: Push to GitHub
+```bash
+git init
+git add .
+git commit -m "Type 1 Diabetes Screening System"
+git remote add origin https://github.com/YOUR_USERNAME/type1-diabetes-screening.git
+git push -u origin main
+```
+
+### Step 2: Go to Render
+**https://render.com** → Sign in with GitHub
+
+### Step 3: Create Web Service
+1. Dashboard → **New +** → **Web Service**
+2. Select your repo: `type1-diabetes-screening`
+3. Fill in settings:
+   - **Name**: `type1-diabetes-screening`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `python app.py`
+   - **Plan**: Free
+
+### Step 4: Set Environment Variables
+In Render dashboard:
+```
+FLASK_ENV = production
+SECRET_KEY = (auto-generated)
+```
+
+### Step 5: Deploy!
+Click **Deploy** and wait 2-5 minutes...
+
+### ✅ Your App is Live!
+Access at: `https://type1-diabetes-screening.onrender.com`
+
+---
+
+## 📋 Pre-Deployment Checklist
+
+- [ ] Code committed to GitHub
+- [ ] `requirements.txt` created ✅
+- [ ] `Procfile` created ✅
+- [ ] `.gitignore` created ✅
+- [ ] `app.py` updated for cloud ✅
+- [ ] GitHub repo created
+- [ ] Render account created
+- [ ] Web Service created
+- [ ] Environment variables set
+- [ ] Deployment complete
+- [ ] URL accessible
+
+---
+
+## 🔗 Your Deployment Files
+
+| File | Status | Purpose |
+|------|--------|---------|
+| `requirements.txt` | ✅ Ready | Python packages |
+| `Procfile` | ✅ Ready | Startup command |
+| `render.yaml` | ✅ Ready | Render config |
+| `.gitignore` | ✅ Ready | Exclude files |
+| `app.py` | ✅ Updated | Cloud-ready |
+| `README.md` | ✅ Ready | Project info |
+
+---
+
+## ❓ Common Questions
+
+**Q: Will my data persist?**  
+A: Yes, but only during the current deployment. If server restarts, new Excel files will be created.
+
+**Q: How much does it cost?**  
+A: Free tier is sufficient for testing. $7/month for production.
+
+**Q: How long to deploy?**  
+A: 2-5 minutes for build + deployment.
+
+**Q: When does my app "sleep"?**  
+A: Free tier sleeps after 15 min inactivity. First request then takes 30-60 sec.
+
+**Q: Can I upgrade?**  
+A: Yes! Paid tier available anytime in Render dashboard.
+
+---
+
+## 🔒 Security Notes
+
+✅ HTTPS: Automatic (free SSL)  
+✅ SECRET_KEY: Auto-generated  
+✅ Environment: Production-safe  
+⚠️ Data: Not persisted (ephemeral)  
+
+For production data, consider:
+- PostgreSQL database (Render offers free tier)
+- AWS S3 for file storage
+- Upgrade to paid Render plan
+
+---
+
+## 📞 Support
+
+**Render Documentation**: https://render.com/docs  
+**Flask Docs**: https://flask.palletsprojects.com  
+**Git Help**: https://git-scm.com/doc
+
+---
+
+**Ready? Go to https://render.com and click "New +"!** 🚀

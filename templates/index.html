@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Type 1 Diabetes Risk Screener</title>
+    <script>
+      tailwind = {
+        config: {
+          theme: {
+            extend: {
+              colors: {
+                darkTeal: '#083A40',
+                primaryTeal: '#0F6C74',
+                lightTeal: '#3AB8C1',
+                accentTeal: '#2FA5AD',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body class="bg-white text-slate-800">
+    <header class="fixed top-0 left-0 right-0 z-30 bg-[#083A40] text-white shadow-lg border-b border-[#0F6C74]/30">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="relative">
+            <div class="absolute inset-0 rounded-full bg-[#3AB8C1]/20 blur-md"></div>
+            <div class="relative rounded-full bg-gradient-to-br from-[#F5FBFC] to-[#E8F5F7] p-1 border border-[#0F6C74]/30">
+              <img src="https://i.ebayimg.com/images/g/SCsAAOSwOwJjapHJ/s-l400.jpg" alt="Caduceus Logo" class="w-10 h-10 rounded-full object-cover" />
+            </div>
+          </div>
+          <div class="leading-tight">
+            <p class="font-semibold text-sm tracking-wide">Early Risk Analysis</p>
+            <p class="text-[#3AB8C1] text-xs tracking-wide">Type 1 Diabetes</p>
+          </div>
+        </div>
+        <div class="hidden sm:flex items-center gap-3 text-sm">
+          <span class="text-slate-200">Automatic Flask app • dynamic port • one-click run</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="pt-24 pb-16 bg-white">
+      <section class="relative overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.04]" style="background-image: linear-gradient(rgba(15, 108, 116, 0.25) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 108, 116, 0.25) 1px, transparent 1px); background-size: 120px 120px;"></div>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div class="grid lg:grid-cols-2 gap-10 items-center">
+            <div class="space-y-6">
+              <p class="inline-flex items-center gap-2 px-3 py-1 bg-[#3AB8C1]/10 text-[#0F6C74] rounded-full text-xs font-semibold">Local & Private</p>
+              <h1 class="text-4xl sm:text-5xl font-bold text-[#083A40] leading-tight">
+                Early Risk Analysis of Type 1 Diabetes
+              </h1>
+              <p class="text-lg text-slate-600 leading-relaxed">
+                Run a local Flask server that serves your existing frontend, selects a free port automatically, opens your browser, and returns a risk estimate powered by your trained model.
+              </p>
+              <div class="flex flex-wrap gap-3 text-sm text-slate-600">
+                <span class="px-3 py-2 rounded-lg bg-[#0F6C74]/10 text-[#0F6C74]">Dynamic port</span>
+                <span class="px-3 py-2 rounded-lg bg-[#3AB8C1]/10 text-[#0F6C74]">One-click run</span>
+                <span class="px-3 py-2 rounded-lg bg-[#083A40]/10 text-[#083A40]">Joblib model</span>
+              </div>
+            </div>
+            <div class="relative">
+              <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#3AB8C1]/20 via-white to-[#0F6C74]/10 blur-3xl"></div>
+              <div class="relative bg-white border border-[#0F6C74]/20 rounded-3xl shadow-soft p-8 space-y-6">
+                <div class="flex items-center gap-3">
+                  <div class="p-3 rounded-xl bg-[#0F6C74]/10 text-[#0F6C74]">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-sm text-slate-500">Quick start</p>
+                    <p class="text-lg font-semibold text-[#083A40]">Double-click run.bat</p>
+                  </div>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed">The server auto-picks a free port, prints the URL, and launches your default browser. No extra commands needed.</p>
+                <div class="grid grid-cols-2 gap-3 text-sm">
+                  <div class="p-3 rounded-xl bg-[#0F6C74]/5 border border-[#0F6C74]/15">
+                    <p class="text-[#0F6C74] font-semibold">/predict</p>
+                    <p class="text-slate-500">POST endpoint for risk</p>
+                  </div>
+                  <div class="p-3 rounded-xl bg-[#3AB8C1]/5 border border-[#3AB8C1]/15">
+                    <p class="text-[#083A40] font-semibold">index.html</p>
+                    <p class="text-slate-500">Served from templates</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-10 items-start">
+          <div class="bg-white border border-slate-200 rounded-2xl shadow-soft p-6 lg:p-8">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Risk Input</p>
+                <h2 class="text-2xl font-bold text-[#083A40]">Prediction Form</h2>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-[#3AB8C1]/10 text-[#0F6C74] text-xs font-semibold">POST /predict</span>
+            </div>
+            <form id="predict-form" class="space-y-4">
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label class="form-label" for="patientId">Patient ID</label>
+                  <input id="patientId" name="patientId" type="text" class="form-input" placeholder="P1001" value="P1001" />
+                </div>
+                <div>
+                  <label class="form-label" for="name">Name</label>
+                  <input id="name" name="name" type="text" class="form-input" placeholder="Patient" value="Patient" />
+                </div>
+              </div>
+              <div class="grid md:grid-cols-3 gap-4">
+                <div>
+                  <label class="form-label" for="gender">Gender</label>
+                  <select id="gender" name="gender" class="form-input">
+                    <option>Male</option>
+                    <option>Female</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label" for="age">Age</label>
+                  <input id="age" name="age" type="number" class="form-input" value="30" min="1" />
+                </div>
+                <div>
+                  <label class="form-label" for="bmi">BMI</label>
+                  <input id="bmi" name="bmi" type="number" class="form-input" step="0.1" value="24" min="10" />
+                </div>
+              </div>
+              <div class="grid md:grid-cols-3 gap-4">
+                <div>
+                  <label class="form-label" for="glucose">Glucose (mg/dL)</label>
+                  <input id="glucose" name="glucose" type="number" class="form-input" value="160" min="50" />
+                </div>
+                <div>
+                  <label class="form-label" for="hba1c">HbA1c (%)</label>
+                  <input id="hba1c" name="hba1c" type="number" class="form-input" step="0.1" value="6.8" min="3" />
+                </div>
+                <div>
+                  <label class="form-label" for="insulin">Insulin (µU/mL)</label>
+                  <input id="insulin" name="insulin" type="number" class="form-input" step="0.1" value="15" min="1" />
+                </div>
+              </div>
+              <div class="grid md:grid-cols-3 gap-4">
+                <div>
+                  <label class="form-label" for="familyHistory">Family History</label>
+                  <select id="familyHistory" name="familyHistory" class="form-input">
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label" for="autoantibody">Autoantibody</label>
+                  <select id="autoantibody" name="autoantibody" class="form-input">
+                    <option>Positive</option>
+                    <option>Negative</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label" for="cPeptide">C-Peptide (ng/mL)</label>
+                  <input id="cPeptide" name="cPeptide" type="number" class="form-input" step="0.1" value="1.5" min="0" />
+                </div>
+              </div>
+              <button type="submit" class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 bg-[#0F6C74] text-white font-semibold rounded-lg hover:bg-[#084A52] transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 7H7m6 4H7m6 4H7m8-8l4-4m0 0v16m-4-4 4 4" />
+                </svg>
+                Submit to /predict
+              </button>
+              <p id="status" class="text-sm text-slate-600"></p>
+            </form>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-2xl shadow-soft p-6 lg:p-8 space-y-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Result</p>
+                <h2 class="text-2xl font-bold text-[#083A40]">Model Output</h2>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-[#083A40]/10 text-[#083A40] text-xs font-semibold">JSON response</span>
+            </div>
+            <div id="result-card" class="p-5 rounded-2xl bg-gradient-to-br from-[#3AB8C1]/10 via-white to-[#0F6C74]/5 border border-[#0F6C74]/20 shadow-inner">
+              <p class="text-sm text-slate-500">Submit the form to see the risk level, probability, and recommendation.</p>
+              <dl class="mt-4 grid grid-cols-1 gap-3 text-sm">
+                <div class="flex items-center justify-between">
+                  <dt class="text-slate-600">Risk level</dt>
+                  <dd id="risk-level" class="font-semibold text-[#083A40]">—</dd>
+                </div>
+                <div class="flex items-center justify-between">
+                  <dt class="text-slate-600">Probability</dt>
+                  <dd id="probability" class="font-semibold text-[#0F6C74]">—</dd>
+                </div>
+              </dl>
+              <div class="mt-4">
+                <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Recommendation</p>
+                <p id="recommendation" class="mt-2 text-slate-700 leading-relaxed">—</p>
+              </div>
+            </div>
+            <div class="p-4 rounded-xl bg-orange-50 border border-orange-200 text-sm text-orange-800">
+              This tool offers an early screening indication only. Please consult a healthcare professional for diagnosis or treatment decisions.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>

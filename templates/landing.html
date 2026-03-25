@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Early Risk Analysis - Landing</title>
+    <script>
+      tailwind = {
+        config: {
+          theme: {
+            extend: {
+              colors: {
+                darkTeal: '#083A40',
+                primaryTeal: '#0F6C74',
+                lightTeal: '#3AB8C1',
+                accentTeal: '#2FA5AD',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body class="bg-white text-slate-800">
+    <header class="fixed top-0 left-0 right-0 z-30 bg-[#083A40] text-white shadow-lg border-b border-[#0F6C74]/30">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="{{ url_for('landing') }}" class="flex items-center gap-3">
+          <div class="relative">
+            <div class="absolute inset-0 rounded-full bg-[#3AB8C1]/20 blur-md"></div>
+            <div class="relative rounded-full bg-gradient-to-br from-[#F5FBFC] to-[#E8F5F7] p-1 border border-[#0F6C74]/30">
+              <img src="https://i.ebayimg.com/images/g/SCsAAOSwOwJjapHJ/s-l400.jpg" alt="Caduceus Logo" class="w-10 h-10 rounded-full object-cover" />
+            </div>
+          </div>
+          <div class="leading-tight">
+            <p class="font-semibold text-sm tracking-wide">Early Risk Analysis</p>
+            <p class="text-[#3AB8C1] text-xs tracking-wide">Type 1 Diabetes</p>
+          </div>
+        </a>
+        <div class="flex items-center gap-3 text-sm">
+          <a href="{{ url_for('login') }}" class="px-4 py-2 rounded-lg bg-white text-[#0F6C74] font-semibold">Login</a>
+          <a href="{{ url_for('register') }}" class="px-4 py-2 rounded-lg bg-[#0F6C74] text-white font-semibold">Register</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="pt-24 pb-16 bg-white">
+      <section class="relative min-h-[70vh] overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.04]" style="background-image: linear-gradient(rgba(15, 108, 116, 0.25) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 108, 116, 0.25) 1px, transparent 1px); background-size: 120px 120px;"></div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+          <div class="space-y-6">
+            <p class="inline-flex items-center gap-2 px-3 py-1 bg-[#3AB8C1]/10 text-[#0F6C74] rounded-full text-xs font-semibold">Local & Private</p>
+            <h1 class="text-4xl sm:text-5xl font-bold text-[#083A40] leading-tight">Early Risk Analysis of Type 1 Diabetes</h1>
+            <p class="text-lg text-slate-600 leading-relaxed">Start from the landing page, log in, fill the dashboard form, and view your results on a dedicated page.</p>
+            <div class="flex gap-3">
+              <a href="{{ url_for('login') }}" class="px-6 py-3 rounded-lg bg-[#0F6C74] text-white font-semibold hover:bg-[#084A52]">Login</a>
+              <a href="{{ url_for('register') }}" class="px-6 py-3 rounded-lg bg-white border border-[#0F6C74] text-[#0F6C74] font-semibold hover:bg-[#0F6C74]/5">Register</a>
+            </div>
+          </div>
+          <div class="relative">
+            <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#3AB8C1]/20 via-white to-[#0F6C74]/10 blur-3xl"></div>
+            <div class="relative bg-white border border-[#0F6C74]/20 rounded-3xl shadow-soft p-8 space-y-6">
+              <h2 class="text-xl font-semibold text-[#083A40]">Flow</h2>
+              <ol class="space-y-3 text-slate-700 text-sm">
+                <li>1) Landing page</li>
+                <li>2) Login / Register</li>
+                <li>3) Dashboard (form)</li>
+                <li>4) Result page</li>
+              </ol>
+              <p class="text-sm text-slate-500">Dashboard is protected by session: unauthenticated users are redirected to login.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

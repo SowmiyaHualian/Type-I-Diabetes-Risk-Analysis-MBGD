@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Risk Analysis Dashboard - Early Risk Analysis of Type 1 Diabetes</title>
+    <script>
+      tailwind = {
+        config: {
+          theme: {
+            extend: {
+              colors: {
+                darkTeal: '#083A40',
+                primaryTeal: '#0F6C74',
+                lightTeal: '#3AB8C1',
+                accentTeal: '#2FA5AD',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body class="bg-white" data-requires-auth="true" data-server-auth="{{ 'true' if session.get('user') else 'false' }}" data-user-name="{{ session.get('user').get('name') if session.get('user') else '' }}" data-user-email="{{ session.get('user').get('email') if session.get('user') else '' }}">
+    <div id="navbar"></div>
+
+    <main class="min-h-screen bg-white pt-24 pb-20">
+      <div class="absolute top-0 left-0 right-0 h-[200px] bg-gradient-to-br from-[#083A40]/5 to-[#0F6C74]/5 -z-10"></div>
+
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-16 text-center">
+          <div class="flex justify-center mb-6">
+            <div class="p-4 rounded-2xl bg-[#0F6C74]/10 border border-[#0F6C74]/30">
+              <img src="https://i.ebayimg.com/images/g/SCsAAOSwOwJjapHJ/s-l400.jpg" alt="Caduceus Logo" class="w-12 h-12 rounded-full object-cover" />
+            </div>
+          </div>
+          <h1 class="text-4xl sm:text-5xl font-bold text-[#083A40] mb-6">Type 1 Diabetes Early Risk Analysis</h1>
+          <p class="text-slate-600 text-lg leading-relaxed max-w-2xl mx-auto">
+            Enter your health information below to check for possible early indicators associated with Type 1 Diabetes.
+            This tool is designed for early screening support and does not provide medical diagnosis.
+          </p>
+        </div>
+
+        <form id="dashboard-form" class="space-y-10" method="post" action="{{ url_for('predict') }}" data-server-post="true">
+          <div class="bg-white rounded-2xl border border-slate-200 p-10 shadow-soft">
+            <div class="flex items-center gap-3 mb-8">
+              <div class="w-1 h-8 bg-[#0F6C74] rounded-full"></div>
+              <h2 class="text-2xl font-bold text-[#083A40]">Basic Health Information</h2>
+            </div>
+            <p class="text-slate-600 mb-6">
+              <span class="text-[#0F6C74] font-semibold">Required</span> - Please provide the following measurements
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <label for="age" class="block text-sm font-semibold text-[#083A40] mb-2">Age (years)</label>
+                <input
+                  type="number"
+                  id="age"
+                  name="age"
+                  placeholder="Enter your age"
+                  class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-slate-50 text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#0F6C74] focus:border-transparent transition-all"
+                />
+                <p class="text-red-500 text-sm mt-1 hidden" data-error="age"></p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-[#083A40] mb-2">Gender</label>
+                <div class="flex gap-4">
+                  <label class="flex items-center gap-2 text-slate-700">
+                    <input type="radio" name="gender" value="Male" class="text-[#0F6C74] focus:ring-[#0F6C74]" />
+                    <span>Male</span>
+                  </label>
+                  <label class="flex items-center gap-2 text-slate-700">
+                    <input type="radio" name="gender" value="Female" class="text-[#0F6C74] focus:ring-[#0F6C74]" />
+                    <span>Female</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label for="weightKg" class="block text-sm font-semibold text-[#083A40] mb-2">Weight (kg)</label>
+                <input
+                  type="number"
+                  id="weightKg"
+                  name="weightKg"
+                  step="0.1"
+                  placeholder="Enter your weight"
+                  class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-slate-50 text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#0F6C74] focus:border-transparent transition-all"
+                />
+                <p class="text-red-500 text-sm mt-1 hidden" data-error="weightKg"></p>
+              </div>
+
+              <div>
+                <label for="heightCm" class="block text-sm font-semibold text-[#083A40] mb-2">Height (cm)</label>
+                <input
+                  type="number"
+                  id="heightCm"
+                  name="heightCm"
+                  step="0.1"
+                  placeholder="Enter your height"
+                  class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-slate-50 text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#0F6C74] focus:border-transparent transition-all"
+                />
+                <p class="text-red-500 text-sm mt-1 hidden" data-error="heightCm"></p>
+              </div>
+
+              <div>
+                <label for="bmi" class="block text-sm font-semibold text-[#083A40] mb-2">BMI (kg/m<sup>2</sup>)</label>
+                <input
+                  type="number"
+                  id="bmi"
+                  name="bmi"
+                  step="0.1"
+                  placeholder="Auto-calculated from weight & height"
+                  class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-slate-50 text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#0F6C74] focus:border-transparent transition-all"
+                  readonly
+                />
+                <p class="text-red-500 text-sm mt-1 hidden" data-error="bmi"></p>
+                <p class="text-xs text-slate-500 mt-2">BMI auto-calculates when weight and height are entered.</p>
+              </div>
+
+              <!-- Glucose Test Type Selector -->
+              <div>
+                <label class="block text-sm font-semibold text-[#083A40] mb-4">Select Glucose Test Type</label>
+                <div class="flex flex-col sm:flex-row gap-4">
+                  <label class="flex items-center cursor-pointer group">
+                    <input 
+                      type="radio" 
+                      name="glucoseTestType" 
+                      value="fasting" 
+                      class="w-5 h-5 text-[#0F6C74] focus:ring-[#0F6C74]"
+                      onchange="toggleGlucoseFields()"
+                    />
+                    <span class="ml-3 text-slate-700 group-hover:text-[#0F6C74] transition-colors font-medium">Fasting Glucose Only</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer group">
+                    <input 
+                      type="radio" 
+                      name="glucoseTestType" 
+                      value="random" 
+                      class="w-5 h-5 text-[#0F6C74] focus:ring-[#0F6C74]"
+                      onchange="toggleGlucoseFields()"
+                    />
+                    <span class="ml-3 text-slate-700 group-hover:text-[#0F6C74] transition-colors font-medium">Random Glucose Only</span>
+                  </label>
+                  <label class="flex items-center cursor-pointer group">
+                    <input 
+                      type="radio" 
+                      name="glucoseTestType" 
+                      value="both" 
+                      class="w-5 h-5 text-[#0F6C74] focus:ring-[#0F6C74]"
+                      onchange="toggleGlucoseFields()"
+                    />
+                    <span class="ml-3 text-slate-700 group-hover:text-[#0F6C74] transition-colors font-medium">Both Tests</span>
+                  </label>
+                </div>
+                <p class="text-red-500 text-sm mt-2 hidden" id="glucoseTypeError"></p>
+              </div>
+
+              <!-- Fasting Glucose Field -->
+              <div id="fastingGlucoseField" class="hidden">
+                <label for="fastingGlucose" class="block text-sm font-semibold text-[#083A40] mb-2">
+                  Fasting Blood Glucose (mg/dL) <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="fastingGlucose"
+                  name="fastingGlucose"
+                  placeholder="e.g., 100"
+                  class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-slate-50 text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#0F6C74] focus:border-transparent transition-all"
+                />
+                <p class="text-red-500 text-sm mt-1 hidden" data-error="fastingGlucose"></p>
+                <p class="text-xs text-slate-500 mt-2">Measured after 8–12 hours without food</p>
+              </div>
+
+              <!-- Random Glucose Field -->
+              <div id="randomGlucoseField" class="hidden">
+                <label for="randomGlucose" class="block text-sm font-semibold text-[#083A40] mb-2">
+                  Random Blood Glucose (mg/dL) <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="randomGlucose"
+                  name="randomGlucose"
+                  placeholder="e.g., 140"
+                  class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-slate-50 text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#0F6C74] focus:border-transparent transition-all"
+                />
+                <p class="text-red-500 text-sm mt-1 hidden" data-error="randomGlucose"></p>
+                <p class="text-xs text-slate-500 mt-2">Measured at any time of the day</p>
+              </div>
+
+              <div>
+                <label for="hba1c" class="block text-sm font-semibold text-[#083A40] mb-2">HbA1c (%)</label>
+                <input
+                  type="number"
+                  id="hba1c"
+                  name="hba1c"
+                  step="0.1"
+                  placeholder="e.g., 5.5"
+                  class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-slate-50 text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#0F6C74] focus:border-transparent transition-all"
+                />
+                <p class="text-red-500 text-sm mt-1 hidden" data-error="hba1c"></p>
+                <p class="text-xs text-slate-500 mt-2">Normal: below 5.7%</p>
+              </div>
+
+              <div>
+                <label for="ketonePresence" class="block text-sm font-semibold text-[#083A40] mb-2">Ketone Presence</label>
+                <select
+                  id="ketonePresence"
+                  name="ketonePresence"
+                  class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-slate-50 text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#0F6C74] focus:border-transparent transition-all"
+                >
+                  <option value="Absent">Absent</option>
+                  <option value="Present">Present</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="familyHistory" class="block text-sm font-semibold text-[#083A40] mb-2">Family History of Diabetes</label>
+                <select
+                  id="familyHistory"
+                  name="familyHistory"
+                  class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-slate-50 text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#0F6C74] focus:border-transparent transition-all"
+                >
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                <p class="text-xs text-slate-500 mt-2">Simple yes/no for hereditary history to keep inputs clear.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 p-10 shadow-soft">
+            <div class="flex items-center gap-3 mb-8">
+              <div class="w-1 h-8 bg-[#0F6C74] rounded-full"></div>
+              <h2 class="text-2xl font-bold text-[#083A40]">Reported Symptoms</h2>
+            </div>
+            <p class="text-slate-600 mb-6">
+              <span class="text-[#0F6C74] font-semibold">Required</span> - Please select the symptoms that are currently experienced.
+            </p>
+
+            <div class="space-y-5">
+              <label class="flex items-center cursor-pointer group">
+                <input type="checkbox" name="symptoms.polyuria" class="w-5 h-5 rounded border-slate-300 text-[#0F6C74] focus:ring-[#0F6C74] cursor-pointer" />
+                <span class="ml-3 text-slate-700 group-hover:text-[#0F6C74] transition-colors">Polyuria (Frequent urination)</span>
+              </label>
+              <label class="flex items-center cursor-pointer group">
+                <input type="checkbox" name="symptoms.polydipsia" class="w-5 h-5 rounded border-slate-300 text-[#0F6C74] focus:ring-[#0F6C74] cursor-pointer" />
+                <span class="ml-3 text-slate-700 group-hover:text-[#0F6C74] transition-colors">Polydipsia (Excessive thirst)</span>
+              </label>
+              <label class="flex items-center cursor-pointer group">
+                <input type="checkbox" name="symptoms.weightLoss" class="w-5 h-5 rounded border-slate-300 text-[#0F6C74] focus:ring-[#0F6C74] cursor-pointer" />
+                <span class="ml-3 text-slate-700 group-hover:text-[#0F6C74] transition-colors">Unexplained weight loss</span>
+              </label>
+              <label class="flex items-center cursor-pointer group">
+                <input type="checkbox" name="symptoms.fatigue" class="w-5 h-5 rounded border-slate-300 text-[#0F6C74] focus:ring-[#0F6C74] cursor-pointer" />
+                <span class="ml-3 text-slate-700 group-hover:text-[#0F6C74] transition-colors">Fatigue</span>
+              </label>
+              <label class="flex items-center cursor-pointer group">
+                <input type="checkbox" name="symptoms.blurredVision" class="w-5 h-5 rounded border-slate-300 text-[#0F6C74] focus:ring-[#0F6C74] cursor-pointer" />
+                <span class="ml-3 text-slate-700 group-hover:text-[#0F6C74] transition-colors">Blurred vision</span>
+              </label>
+            </div>
+
+            <p class="text-red-500 text-sm mt-4 hidden" data-error="symptoms"></p>
+          </div>
+
+          <div class="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-2xl border border-slate-300/50 p-10 shadow-soft">
+            <div class="flex items-center gap-3 mb-8">
+              <div class="w-1 h-8 bg-[#3AB8C1] rounded-full"></div>
+              <h2 class="text-2xl font-bold text-[#083A40]">Advanced Test Results</h2>
+            </div>
+            <p class="text-slate-600 mb-6">
+              <span class="text-[#3AB8C1] font-semibold">Optional</span> - If you have results from additional medical tests, you may enter them to improve the analysis accuracy.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <label for="cPeptideLevel" class="block text-sm font-semibold text-[#083A40] mb-2">C-Peptide Level (ng/mL)</label>
+                <input
+                  type="number"
+                  id="cPeptideLevel"
+                  name="cPeptideLevel"
+                  step="0.1"
+                  placeholder="Leave empty if not available"
+                  class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-white text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#3AB8C1] focus:border-transparent transition-all"
+                />
+                <p class="text-xs text-slate-500 mt-2">Normal: 1.1-4.4 ng/mL</p>
+              </div>
+
+              <div>
+                <label for="autoantibodyResult" class="block text-sm font-semibold text-[#083A40] mb-2">Islet Autoantibody Test Result</label>
+                <select
+                  id="autoantibodyResult"
+                  name="autoantibodyResult"
+                  class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-white text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#3AB8C1] focus:border-transparent transition-all"
+                >
+                  <option value="Not Tested">Not Tested</option>
+                  <option value="Positive">Positive</option>
+                  <option value="Negative">Negative</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-4 pt-8 pb-4">
+            <button type="submit" class="flex-1 py-5 px-6 bg-[#0F6C74] text-white font-bold text-lg rounded-xl transition-all duration-300 hover:bg-[#084A52] shadow-lg shadow-[#0F6C74]/20 hover:shadow-xl hover:shadow-[#0F6C74]/30 active:translate-y-1">
+              Analyze Indicators
+            </button>
+            <button type="button" id="dashboard-clear" class="flex-1 py-5 px-6 bg-white border-2 border-slate-300 text-[#083A40] font-bold text-lg rounded-xl transition-all duration-300 hover:border-[#0F6C74] hover:bg-slate-50 active:translate-y-1">
+              Clear Form
+            </button>
+          </div>
+        </form>
+
+        <div class="mt-16 p-8 bg-[#083A40]/5 border border-[#0F6C74]/30 rounded-2xl shadow-soft">
+          <p class="text-base text-slate-600 leading-relaxed">
+            <span class="font-semibold text-[#0F6C74]">Disclaimer:</span> This analysis tool is intended for
+            informational purposes only and should not replace professional medical advice. Please consult a healthcare
+            professional for accurate diagnosis and treatment.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    {% if session.get('user') %}
+    <script>
+      // Sync server session user into localStorage for navbar display and client flows
+      window.localStorage.setItem('userLoggedIn', 'true');
+      window.localStorage.setItem('user', JSON.stringify({
+        name: {{ session.get('user').get('name')|tojson }},
+        email: {{ session.get('user').get('email')|tojson }}
+      }));
+    </script>
+    {% endif %}
+
+    <script>
+      /**
+       * Dynamic Glucose Test Type Selector
+       * Handles show/hide logic for fasting and random glucose fields based on user selection
+       */
+      function toggleGlucoseFields() {
+        const fastingField = document.getElementById('fastingGlucoseField');
+        const randomField = document.getElementById('randomGlucoseField');
+        const fastingInput = document.getElementById('fastingGlucose');
+        const randomInput = document.getElementById('randomGlucose');
+        const selectedType = document.querySelector('input[name="glucoseTestType"]:checked');
+
+        // Reset error messages
+        const glucoseTypeError = document.getElementById('glucoseTypeError');
+        glucoseTypeError.classList.add('hidden');
+
+        if (!selectedType) {
+          return;
+        }
+
+        const type = selectedType.value;
+
+        // Toggle visibility and required attributes based on selection
+        if (type === 'fasting') {
+          fastingField.classList.remove('hidden');
+          randomField.classList.add('hidden');
+          fastingInput.setAttribute('required', 'required');
+          randomInput.removeAttribute('required');
+          randomInput.value = '';
+        } else if (type === 'random') {
+          fastingField.classList.add('hidden');
+          randomField.classList.remove('hidden');
+          fastingInput.removeAttribute('required');
+          randomInput.setAttribute('required', 'required');
+          fastingInput.value = '';
+        } else if (type === 'both') {
+          fastingField.classList.remove('hidden');
+          randomField.classList.remove('hidden');
+          fastingInput.setAttribute('required', 'required');
+          randomInput.removeAttribute('required');
+        }
+      }
+
+      /**
+       * Validate glucose fields on form submission
+       * Ensures correct fields are filled based on user's glucose test type selection
+       */
+      function validateGlucoseFields() {
+        const selectedType = document.querySelector('input[name="glucoseTestType"]:checked');
+        const glucoseTypeError = document.getElementById('glucoseTypeError');
+        const fastingInput = document.getElementById('fastingGlucose');
+        const randomInput = document.getElementById('randomGlucose');
+        const fastingError = document.querySelector('[data-error="fastingGlucose"]');
+        const randomError = document.querySelector('[data-error="randomGlucose"]');
+
+        // Reset errors
+        glucoseTypeError.classList.add('hidden');
+        fastingError?.classList.add('hidden');
+        randomError?.classList.add('hidden');
+
+        // Check if test type is selected
+        if (!selectedType) {
+          glucoseTypeError.textContent = 'Please select a glucose test type';
+          glucoseTypeError.classList.remove('hidden');
+          return false;
+        }
+
+        const type = selectedType.value;
+
+        // Validate based on selected type
+        if (type === 'fasting') {
+          if (!fastingInput.value || parseFloat(fastingInput.value) <= 0) {
+            fastingError.textContent = 'Fasting glucose is required and must be greater than 0';
+            fastingError.classList.remove('hidden');
+            return false;
+          }
+        } else if (type === 'random') {
+          if (!randomInput.value || parseFloat(randomInput.value) <= 0) {
+            randomError.textContent = 'Random glucose is required and must be greater than 0';
+            randomError.classList.remove('hidden');
+            return false;
+          }
+        } else if (type === 'both') {
+          if (!fastingInput.value || parseFloat(fastingInput.value) <= 0) {
+            fastingError.textContent = 'Fasting glucose is required and must be greater than 0';
+            fastingError.classList.remove('hidden');
+            return false;
+          }
+          // Random is optional when "both" selected, but if provided, must be valid
+          if (randomInput.value && parseFloat(randomInput.value) <= 0) {
+            randomError.textContent = 'Random glucose must be greater than 0 if provided';
+            randomError.classList.remove('hidden');
+            return false;
+          }
+        }
+
+        return true;
+      }
+
+      // Initialize glucose field visibility on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        // Set default selection to "both" if no selection exists
+        const defaultSelection = document.querySelector('input[name="glucoseTestType"][value="both"]');
+        if (defaultSelection && !document.querySelector('input[name="glucoseTestType"]:checked')) {
+          defaultSelection.checked = true;
+          toggleGlucoseFields();
+        }
+
+        // Attach form validation
+        const form = document.getElementById('dashboard-form');
+        if (form) {
+          form.addEventListener('submit', function(e) {
+            if (!validateGlucoseFields()) {
+              e.preventDefault();
+              return false;
+            }
+          });
+        }
+
+        // Attach clear button handler to reset glucose selection
+        const clearBtn = document.getElementById('dashboard-clear');
+        if (clearBtn) {
+          clearBtn.addEventListener('click', function() {
+            document.querySelectorAll('input[name="glucoseTestType"]').forEach(input => input.checked = false);
+            document.getElementById('fastingGlucose').value = '';
+            document.getElementById('randomGlucose').value = '';
+            document.getElementById('fastingGlucoseField').classList.add('hidden');
+            document.getElementById('randomGlucoseField').classList.add('hidden');
+            document.getElementById('glucoseTypeError').classList.add('hidden');
+          });
+        }
+      });
+    </script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+      window.App.initPage();
+    </script>
+  </body>
+</html>

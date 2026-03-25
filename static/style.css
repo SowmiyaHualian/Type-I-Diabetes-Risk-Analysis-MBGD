@@ -1,0 +1,270 @@
+:root {
+  --color-dark-teal: #083A40;
+  --color-primary-teal: #0F6C74;
+  --color-light-teal: #3AB8C1;
+  --color-accent-teal: #2FA5AD;
+  --color-secondary-bg: #F5FBFC;
+  --color-main-white: #FFFFFF;
+  --color-text-dark: #0F2E35;
+  --color-text-muted: #5A7A82;
+  --color-border-light: #D1E5E8;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #F5F7F8;
+  color: #1A2332;
+}
+
+.bg-medical-gradient {
+  background: linear-gradient(135deg, #e6f7f7 0%, #ffffff 60%, #f0fbfb 100%);
+}
+
+.bg-medical-advanced {
+  position: relative;
+  background:
+    linear-gradient(rgba(8, 58, 64, 0.55), rgba(15, 108, 116, 0.55)),
+    url('https://images.unsplash.com/photo-1581091870627-3d7f6c2f6c87?q=80&w=2070&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.bg-medical-advanced::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(58, 184, 193, 0.25), transparent 60%);
+  pointer-events: none;
+}
+
+.bg-illustration {
+  background-image:
+    url('https://www.svgrepo.com/show/499170/dna-helix.svg'),
+    url('https://www.svgrepo.com/show/490993/ecg.svg'),
+    url('https://www.svgrepo.com/show/500430/molecule.svg'),
+    url('https://www.svgrepo.com/show/532328/medical-cross.svg');
+  background-repeat: no-repeat;
+  background-size: 420px, 520px, 380px, 320px;
+  background-position: 6% 18%, 92% 12%, 78% 68%, 12% 70%;
+  opacity: 0.06;
+  filter: blur(2px);
+}
+
+.glass-card {
+  backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(15, 108, 116, 0.14);
+  box-shadow: 0 20px 60px rgba(8, 58, 64, 0.16), 0 8px 24px rgba(8, 58, 64, 0.08);
+}
+
+.glow-ring::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 9999px;
+  border: 2px solid rgba(58, 184, 193, 0.35);
+  box-shadow: 0 0 35px rgba(58, 184, 193, 0.4);
+  animation: pulse-glow 3.4s ease-in-out infinite;
+}
+
+.float-soft {
+  animation: float 7s ease-in-out infinite;
+}
+
+.floating-icon {
+  position: absolute;
+  color: #0F6C74;
+  opacity: 0.08;
+  filter: blur(0.2px);
+}
+
+.blur-spot {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: rgba(0, 128, 128, 0.1);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0, 128, 128, 0.15), transparent 60%);
+  pointer-events: none;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  align-items: center;
+}
+
+.mock-panel {
+  background: linear-gradient(145deg, rgba(15, 108, 116, 0.85), rgba(58, 184, 193, 0.9));
+  color: #f8fbfc;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 20px 50px rgba(15, 108, 116, 0.28);
+}
+
+.sparkline {
+  position: relative;
+  height: 160px;
+  margin-top: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.sparkline::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.05) 100%);
+  background-size: 260% 100%;
+  animation: shimmer 4s linear infinite;
+}
+
+.sparkline svg {
+  position: relative;
+  z-index: 1;
+}
+
+.feature-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(8, 58, 64, 0.12);
+}
+
+.step-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(8, 58, 64, 0.12);
+}
+
+.cta-button {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 38px rgba(15, 108, 116, 0.24);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #E2E8F0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2F8F9D;
+  border-radius: 4px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(3deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(47, 143, 157, 0.25); }
+  50% { box-shadow: 0 0 30px rgba(47, 143, 157, 0.45); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-400 { animation-delay: 0.4s; }
+.animation-delay-600 { animation-delay: 0.6s; }
+.animation-delay-800 { animation-delay: 0.8s; }
+
+.shadow-soft {
+  box-shadow: 0 14px 35px rgba(8, 58, 64, 0.08), 0 4px 12px rgba(8, 58, 64, 0.06);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 600;
+  color: #0F2E35;
+  font-size: 0.95rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--color-border-light);
+  border-radius: 0.65rem;
+  background: #fff;
+  color: #0F2E35;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-primary-teal);
+  box-shadow: 0 0 0 3px rgba(15, 108, 116, 0.18);
+}

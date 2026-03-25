@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Early Risk Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body class="bg-[#F5F7F8] min-h-screen">
+    <header class="bg-[#083A40] text-white shadow-sm">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="{{ url_for('landing') }}" class="font-semibold">Early Risk Analysis</a>
+        <div class="flex items-center gap-3">
+          <a href="{{ url_for('logout') }}" class="px-3 py-2 rounded-lg bg-white text-[#0F6C74] font-semibold">Logout</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-soft p-6 lg:p-8">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Risk Input</p>
+            <h1 class="text-2xl font-bold text-[#083A40]">Dashboard</h1>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-[#0F6C74]/10 text-[#0F6C74] text-xs font-semibold">Protected</span>
+        </div>
+
+        <form method="post" action="{{ url_for('predict') }}" class="space-y-4">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="patient_id">Patient ID</label>
+              <input class="form-input" id="patient_id" name="patient_id" type="text" value="P1001" required />
+            </div>
+            <div>
+              <label class="form-label" for="name">Name</label>
+              <input class="form-input" id="name" name="name" type="text" value="Patient" required />
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-4">
+            <div>
+              <label class="form-label" for="gender">Gender</label>
+              <select class="form-input" id="gender" name="gender">
+                <option>Male</option>
+                <option>Female</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="age">Age</label>
+              <input class="form-input" id="age" name="age" type="number" value="30" min="1" required />
+            </div>
+            <div>
+              <label class="form-label" for="bmi">BMI</label>
+              <input class="form-input" id="bmi" name="bmi" type="number" step="0.1" value="24" min="10" required />
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-4">
+            <div>
+              <label class="form-label" for="glucose_level">Glucose (mg/dL)</label>
+              <input class="form-input" id="glucose_level" name="glucose_level" type="number" value="160" min="50" required />
+            </div>
+            <div>
+              <label class="form-label" for="hba1c">HbA1c (%)</label>
+              <input class="form-input" id="hba1c" name="hba1c" type="number" step="0.1" value="6.8" min="3" required />
+            </div>
+            <div>
+              <label class="form-label" for="insulin_level">Insulin (µU/mL)</label>
+              <input class="form-input" id="insulin_level" name="insulin_level" type="number" step="0.1" value="15" min="1" required />
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-4">
+            <div>
+              <label class="form-label" for="family_history">Family History</label>
+              <select class="form-input" id="family_history" name="family_history">
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="autoantibody_presence">Autoantibody</label>
+              <select class="form-input" id="autoantibody_presence" name="autoantibody_presence">
+                <option>Positive</option>
+                <option>Negative</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="c_peptide_level">C-Peptide (ng/mL)</label>
+              <input class="form-input" id="c_peptide_level" name="c_peptide_level" type="number" step="0.1" value="1.5" min="0" required />
+            </div>
+          </div>
+
+          <button type="submit" class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 bg-[#0F6C74] text-white font-semibold rounded-lg hover:bg-[#084A52] transition-colors">
+            Submit to /predict
+          </button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>
