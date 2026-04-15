@@ -1,0 +1,21 @@
+{
+  "feature_names": [
+    "Age",
+    "BMI",
+    "Fasting_Glucose",
+    "Random_Glucose",
+    "HbA1c",
+    "Ketone",
+    "Polyuria",
+    "Polydipsia",
+    "Weight_Loss",
+    "Fatigue",
+    "Blurred_Vision",
+    "Family_History"
+  ],
+  "n_features": 12,
+  "train_date": "2026-04-15 21:29:52",
+  "dataset_size": 17500,
+  "train_samples": 14000,
+  "test_samples": 3500
+}

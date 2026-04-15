@@ -162,7 +162,7 @@ def save_patient_record(user: dict, form_data: dict, prediction: dict) -> None:
         "C_Peptide (optional)": _parse_number(form_data.get("cPeptideLevel")),
         "Autoantibodies (optional)": form_data.get("autoantibodyResult", ""),
         "Prediction_Result": prediction.get("risk_level", ""),
-        "Model_Confidence": round(float(prediction.get("probability", 0)), 4) if prediction.get("probability") is not None else "",
+        "Model_Confidence": round(float(prediction.get("confidence", 0)), 4) if prediction.get("confidence") is not None else "",
     }
 
     ordered_record = {col: record.get(col, "") for col in PATIENT_RECORD_COLUMNS}

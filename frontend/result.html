@@ -65,218 +65,251 @@
     </nav>
   </div>
 
-  <main class="min-h-screen bg-white pt-24 pb-16">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 fade-in">
-      <!-- Result Section -->
-      <div class="result-card bg-white rounded-3xl p-8 sm:p-12 mb-10 border border-slate-200">
-        <!-- Dynamic Result Header Based on Prediction -->
-        {% if result.risk_level == 'strong' %}
-          <div class="accent-line bg-red-500 mb-8"></div>
-          <div class="flex items-start gap-4 mb-8">
-            <div class="flex-shrink-0">
-              <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-                <svg class="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M18.868 5.132A9 9 0 00.868 17.132c.273.782 1.07 1.272 1.912 1.277h13.98c.843-.005 1.64-.495 1.912-1.277A9 9 0 0018.868 5.132zm-8-.868a8.001 8.001 0 110 16.002A8.001 8.001 0 0110.868 4.264z" clip-rule="evenodd" />
-                </svg>
-              </div>
+  <main class="min-h-screen bg-gradient-to-b from-slate-50 to-white pt-24 pb-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 fade-in">
+      
+      <!-- ENHANCED USER-FRIENDLY RESULT PAGE -->
+      
+      <!-- 1. RISK LEVEL -->
+      <div class="result-card bg-white rounded-3xl p-8 sm:p-12 mb-8 border border-slate-200">
+        {% if result.risk_level == 'HIGH' %}
+          <div class="accent-line bg-red-500 mb-6"></div>
+          <div class="flex items-start gap-4 mb-6">
+            <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+              <svg class="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18.868 5.132A9 9 0 00.868 17.132c.273.782 1.07 1.272 1.912 1.277h13.98c.843-.005 1.64-.495 1.912-1.277A9 9 0 0018.868 5.132zm-8-.868a8.001 8.001 0 110 16.002A8.001 8.001 0 0110.868 4.264z" clip-rule="evenodd" />
+              </svg>
             </div>
-            <div class="flex-1">
-              <h1 class="text-4xl sm:text-5xl font-bold text-red-700 mb-2">Strong Indicators Found</h1>
-              <p class="text-lg text-slate-600">Risk Score: <span class="font-bold text-red-600">{{ "%.1f" | format(result.probability * 100 if result.probability else 0) }}%</span></p>
-            </div>
-          </div>
-
-        {% elif result.risk_level == 'moderate' %}
-          <div class="accent-line bg-orange-500 mb-8"></div>
-          <div class="flex items-start gap-4 mb-8">
-            <div class="flex-shrink-0">
-              <div class="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center">
-                <svg class="w-8 h-8 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-              </div>
-            </div>
-            <div class="flex-1">
-              <h1 class="text-4xl sm:text-5xl font-bold text-orange-700 mb-2">Moderate Indicators Found</h1>
-              <p class="text-lg text-slate-600">Risk Score: <span class="font-bold text-orange-600">{{ "%.1f" | format(result.probability * 100 if result.probability else 0) }}%</span></p>
+            <div>
+              <h1 class="text-3xl font-bold text-red-700 mb-2">High Risk Indicators Found</h1>
+              <p class="text-red-600 font-semibold">Confidence: {{ "%.0f" | format(result.confidence * 100) }}%</p>
             </div>
           </div>
-
+        {% elif result.risk_level == 'MODERATE' %}
+          <div class="accent-line bg-orange-500 mb-6"></div>
+          <div class="flex items-start gap-4 mb-6">
+            <div class="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+              <svg class="w-8 h-8 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-3xl font-bold text-orange-700 mb-2">Moderate Risk Indicators Found</h1>
+              <p class="text-orange-600 font-semibold">Confidence: {{ "%.0f" | format(result.confidence * 100) }}%</p>
+            </div>
+          </div>
         {% else %}
-          <div class="accent-line bg-green-500 mb-8"></div>
-          <div class="flex items-start gap-4 mb-8">
-            <div class="flex-shrink-0">
-              <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-                <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-              </div>
+          <div class="accent-line bg-green-500 mb-6"></div>
+          <div class="flex items-start gap-4 mb-6">
+            <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+              <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
             </div>
-            <div class="flex-1">
-              <h1 class="text-4xl sm:text-5xl font-bold text-green-700 mb-2">No Strong Indicators Found</h1>
-              <p class="text-lg text-slate-600">Risk Score: <span class="font-bold text-green-600">{{ "%.1f" | format(result.probability * 100 if result.probability else 0) }}%</span></p>
+            <div>
+              <h1 class="text-3xl font-bold text-green-700 mb-2">No Risk Indicators Found</h1>
+              <p class="text-green-600 font-semibold">Confidence: {{ "%.0f" | format(result.confidence * 100) }}%</p>
             </div>
           </div>
         {% endif %}
       </div>
 
-      <!-- Acknowledgement Section -->
-      <div class="result-card bg-white rounded-3xl p-8 sm:p-12 mb-10 border border-slate-200">
-        <div class="flex items-start gap-4 mb-6">
-          <div class="w-10 h-10 rounded-full bg-[#0F6C74] flex-shrink-0 flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+      <!-- 2. WHAT THIS MEANS -->
+      <div class="result-card bg-white rounded-3xl p-8 sm:p-12 mb-8 border border-slate-200">
+        <h2 class="text-2xl font-bold text-slate-800 mb-6">What This Means</h2>
+        {% if result.risk_level == 'HIGH' %}
+          <div class="bg-red-50 border border-red-200 rounded-2xl p-6">
+            <p class="text-slate-800 text-lg leading-relaxed">
+              Some of your health values are at concerning levels. This suggests you may need immediate attention from a healthcare professional. Your test results require prompt evaluation.
+            </p>
           </div>
-          <h2 class="text-3xl font-bold text-[#083A40]">Clinical Interpretation</h2>
-        </div>
+        {% elif result.risk_level == 'MODERATE' %}
+          <div class="bg-orange-50 border border-orange-200 rounded-2xl p-6">
+            <p class="text-slate-800 text-lg leading-relaxed">
+              Some of your health values are slightly outside the normal range. This may need attention and monitoring. It's a good idea to keep track of these values and discuss them with a healthcare provider.
+            </p>
+          </div>
+        {% else %}
+          <div class="bg-green-50 border border-green-200 rounded-2xl p-6">
+            <p class="text-slate-800 text-lg leading-relaxed">
+              Your health values are within normal range. No immediate concerns are found in your screening results. Continue maintaining a healthy lifestyle.
+            </p>
+          </div>
+        {% endif %}
+      </div>
 
-        <div class="bg-[#0F6C74]/5 border border-[#0F6C74]/30 rounded-2xl p-6 sm:p-8">
-          {% if result.risk_level == 'strong' %}
-            <p class="text-lg text-slate-800 leading-relaxed mb-6">
-              Multiple strong indicators associated with early signs of Type 1 Diabetes have been identified. This screening result suggests a higher likelihood of early indicators. This may require immediate medical attention. It is strongly recommended to consult a healthcare professional as soon as possible for further evaluation, confirmatory testing (including antibody tests and C-peptide measurement), and appropriate clinical management.
-            </p>
-            <p class="text-sm text-slate-600 italic">
-              ⚠️ This result does not constitute a medical diagnosis. A qualified healthcare professional must perform formal diagnostic testing to confirm or rule out Type 1 Diabetes.
-            </p>
-
-          {% elif result.risk_level == 'moderate' %}
-            <p class="text-lg text-slate-800 leading-relaxed mb-6">
-              Some notable indicators related to Type 1 Diabetes have been observed. While this does not confirm any condition, it is advisable to monitor your health closely and consider consulting a healthcare professional for further guidance. Regular follow-up testing and lifestyle monitoring are recommended to track any changes in your health status.
-            </p>
-            <p class="text-sm text-slate-600 italic">
-              ⚠️ This result does not constitute a medical diagnosis. Professional medical evaluation is recommended for accurate assessment.
-            </p>
-
-          {% else %}
-            <p class="text-lg text-slate-800 leading-relaxed mb-6">
-              No significant indicators of Type 1 Diabetes have been identified based on the provided information. This is a positive outcome. Maintaining a healthy lifestyle, regular medical check-ups, and continued awareness of health changes is recommended to support long-term well-being.
-            </p>
-            <p class="text-sm text-slate-600 italic">
-              ✓ This result is reassuring, but routine medical check-ups should continue as part of preventive healthcare.
-            </p>
-          {% endif %}
+      <!-- 3. YOUR HEALTH PARAMETERS -->
+      <div class="result-card bg-white rounded-3xl p-8 sm:p-12 mb-8 border border-slate-200">
+        <h2 class="text-2xl font-bold text-slate-800 mb-6">Your Health Parameters</h2>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="text-center p-4 bg-slate-50 rounded-2xl">
+            <p class="text-sm font-semibold text-slate-600 mb-2">Glucose Level</p>
+            <p class="text-lg font-bold {% if result.glucose == 'High' %}text-red-600{% elif result.glucose == 'Elevated' %}text-orange-600{% else %}text-green-600{% endif %}">{{ result.glucose }}</p>
+          </div>
+          <div class="text-center p-4 bg-slate-50 rounded-2xl">
+            <p class="text-sm font-semibold text-slate-600 mb-2">Ketone Level</p>
+            <p class="text-lg font-bold {% if result.ketones == 'Elevated' %}text-red-600{% else %}text-green-600{% endif %}">{{ result.ketones }}</p>
+          </div>
+          <div class="text-center p-4 bg-slate-50 rounded-2xl">
+            <p class="text-sm font-semibold text-slate-600 mb-2">BMI Status</p>
+            <p class="text-lg font-bold {% if result.bmi == 'Overweight' %}text-orange-600{% elif result.bmi == 'Underweight' %}text-blue-600{% else %}text-green-600{% endif %}">{{ result.bmi }}</p>
+          </div>
         </div>
       </div>
 
-      <!-- Rehabilitation & Care Measures Section -->
-      <div class="result-card bg-white rounded-3xl p-8 sm:p-12 mb-10 border border-slate-200">
-        <div class="flex items-start gap-4 mb-8">
-          <div class="w-10 h-10 rounded-full bg-[#3AB8C1] flex-shrink-0 flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h2 class="text-3xl font-bold text-[#083A40]">Recommended Care Measures</h2>
-        </div>
-
-        {% if result.risk_level == 'strong' %}
-          <div class="space-y-4">
-            <div class="measure-point border-red-500 bg-red-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-red-700">1.</span> <strong>Immediate Professional Consultation:</strong> It is strongly recommended to consult a healthcare professional immediately for further evaluation and confirmation. An endocrinologist or diabetologist consultation may be beneficial.</p>
+      <!-- 4. RECOMMENDED CARE -->
+      <div class="result-card bg-white rounded-3xl p-8 sm:p-12 mb-8 border border-slate-200">
+        <h2 class="text-2xl font-bold text-slate-800 mb-6">Recommended Care</h2>
+        {% if result.risk_level == 'HIGH' %}
+          <div class="space-y-3">
+            <div class="flex items-start gap-3 p-4 bg-red-50 rounded-xl">
+              <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Please consult a doctor as soon as possible</span>
             </div>
-            <div class="measure-point border-red-500 bg-red-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-red-700">2.</span> <strong>Blood Glucose Monitoring & Insulin Therapy:</strong> Regular blood glucose monitoring should be started immediately. Insulin therapy may be required based on medical advice and confirmatory test results.</p>
+            <div class="flex items-start gap-3 p-4 bg-red-50 rounded-xl">
+              <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Monitor your blood sugar levels regularly</span>
             </div>
-            <div class="measure-point border-red-500 bg-red-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-red-700">3.</span> <strong>Strict Dietary Management:</strong> A strict, medically supervised diet plan with controlled carbohydrate intake and avoidance of refined sugars should be followed. Consult a registered dietitian for personalized guidance.</p>
+            <div class="flex items-start gap-3 p-4 bg-red-50 rounded-xl">
+              <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Follow a strict and healthy diet</span>
             </div>
-            <div class="measure-point border-red-500 bg-red-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-red-700">4.</span> <strong>Physical Activity Modifications:</strong> Physical activity should be limited to light or moderate levels until proper medical guidance is received. Exercise should be carefully monitored and adjusted based on blood glucose levels.</p>
+            <div class="flex items-start gap-3 p-4 bg-red-50 rounded-xl">
+              <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Avoid sugary and high-carb foods</span>
             </div>
-            <div class="measure-point border-red-500 bg-red-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-red-700">5.</span> <strong>Psychological Support:</strong> Psychological support or professional counseling may help in managing stress, anxiety, and emotional challenges associated with health concerns. Consider reaching out to mental health professionals or support groups.</p>
+            <div class="flex items-start gap-3 p-4 bg-red-50 rounded-xl">
+              <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Do light physical activity only if comfortable</span>
             </div>
-            <div class="measure-point border-red-500 bg-red-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-red-700">6.</span> <strong>Complication Screening:</strong> Early screening for potential complications such as eye (retinopathy), kidney (nephropathy), and nerve damage (neuropathy) should be considered. Regular ophthalmology and nephrology assessments may be needed.</p>
-            </div>
-            <div class="measure-point border-red-500 bg-red-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-red-700">7.</span> <strong>Family Awareness & Emergency Preparedness:</strong> Family members should be informed about the screening result. Emergency preparedness (glucagon kits, emergency contacts) and continuous monitoring tools (glucometers, continuous glucose monitors, mobile health apps) are essential.</p>
-            </div>
-          </div>
-
-        {% elif result.risk_level == 'moderate' %}
-          <div class="space-y-4">
-            <div class="measure-point border-orange-500 bg-orange-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-orange-700">1.</span> <strong>Medical Consultation & Monitoring:</strong> It is advisable to consult a doctor at your earliest convenience for professional guidance. Regular monitoring of blood glucose and HbA1c levels should be scheduled.</p>
-            </div>
-            <div class="measure-point border-orange-500 bg-orange-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-orange-700">2.</span> <strong>Balanced Diet with Reduced Sugar:</strong> A balanced diet with reduced sugar and refined carbohydrate intake should be maintained. Proper nutrition planning is important for health stabilization.</p>
-            </div>
-            <div class="measure-point border-orange-500 bg-orange-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-orange-700">3.</span> <strong>Regular Physical Activity:</strong> Regular physical activity such as walking, cycling, or swimming should be incorporated into your daily routine. Aim for at least 150 minutes of moderate exercise per week.</p>
-            </div>
-            <div class="measure-point border-orange-500 bg-orange-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-orange-700">4.</span> <strong>Stress Management:</strong> Stress management techniques such as relaxation exercises, meditation, yoga, or mindfulness should be practiced regularly to support overall well-being.</p>
-            </div>
-            <div class="measure-point border-orange-500 bg-orange-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-orange-700">5.</span> <strong>Healthy Lifestyle Routine:</strong> Maintaining a healthy lifestyle with proper sleep (7-8 hours), consistent daily routine, and avoidance of harmful habits is beneficial for health stabilization.</p>
-            </div>
-            <div class="measure-point border-orange-500 bg-orange-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-orange-700">6.</span> <strong>Basic Complication Screening:</strong> Basic screening for potential complications can be considered during your next medical visit, if deemed necessary by your healthcare provider.</p>
-            </div>
-            <div class="measure-point border-orange-500 bg-orange-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-orange-700">7.</span> <strong>Health Tracking & Awareness:</strong> Awareness of symptoms and simple health tracking using mobile applications can support better monitoring of your health status and help identify any changes.</p>
+            <div class="flex items-start gap-3 p-4 bg-red-50 rounded-xl">
+              <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Do not ignore symptoms</span>
             </div>
           </div>
-
+        {% elif result.risk_level == 'MODERATE' %}
+          <div class="space-y-3">
+            <div class="flex items-start gap-3 p-4 bg-orange-50 rounded-xl">
+              <svg class="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Reduce sugar and processed food intake</span>
+            </div>
+            <div class="flex items-start gap-3 p-4 bg-orange-50 rounded-xl">
+              <svg class="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Follow a balanced diet</span>
+            </div>
+            <div class="flex items-start gap-3 p-4 bg-orange-50 rounded-xl">
+              <svg class="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Exercise regularly (at least 30 minutes daily)</span>
+            </div>
+            <div class="flex items-start gap-3 p-4 bg-orange-50 rounded-xl">
+              <svg class="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Monitor your health values regularly</span>
+            </div>
+            <div class="flex items-start gap-3 p-4 bg-orange-50 rounded-xl">
+              <svg class="w-6 h-6 text-orange-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">If you notice symptoms, consider visiting a doctor</span>
+            </div>
+          </div>
         {% else %}
-          <div class="space-y-4">
-            <div class="measure-point border-green-600 bg-green-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-green-700">1.</span> <strong>Routine Health Maintenance:</strong> Routine annual or biennial medical check-ups are sufficient to maintain overall health and detect any changes early.</p>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3 p-4 bg-green-50 rounded-xl">
+              <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Continue your current healthy lifestyle</span>
             </div>
-            <div class="measure-point border-green-600 bg-green-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-green-700">2.</span> <strong>Continue Healthy Diet:</strong> A healthy and balanced diet should be continued as part of daily life. Focus on nutritious whole foods and hydration.</p>
+            <div class="flex items-start gap-3 p-4 bg-green-50 rounded-xl">
+              <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Eat balanced and nutritious food</span>
             </div>
-            <div class="measure-point border-green-600 bg-green-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-green-700">3.</span> <strong>Regular Physical Activity:</strong> Staying physically active helps in maintaining long-term well-being. Aim for regular exercise as part of your lifestyle.</p>
+            <div class="flex items-start gap-3 p-4 bg-green-50 rounded-xl">
+              <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Stay physically active regularly</span>
             </div>
-            <div class="measure-point border-green-600 bg-green-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-green-700">4.</span> <strong>Mental Health Support:</strong> Mental health should be supported by maintaining a stress-free lifestyle, engaging in enjoyable activities, and fostering positive social connections.</p>
-            </div>
-            <div class="measure-point border-green-600 bg-green-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-green-700">5.</span> <strong>Healthy Daily Habits:</strong> Healthy daily habits such as proper sleep (7-8 hours per night), regular physical activity, and mindful eating should be followed consistently.</p>
-            </div>
-            <div class="measure-point border-green-600 bg-green-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-green-700">6.</span> <strong>Complication Prevention:</strong> There is no immediate need for complication screening at this stage. Continue with general preventive health care practices.</p>
-            </div>
-            <div class="measure-point border-green-600 bg-green-50 rounded-xl p-5">
-              <p class="text-base text-slate-800"><span class="font-bold text-green-700">7.</span> <strong>Preventive Health Awareness:</strong> General health awareness and preventive care practices should be maintained. Stay informed about health trends and maintain regular communication with healthcare providers.</p>
+            <div class="flex items-start gap-3 p-4 bg-green-50 rounded-xl">
+              <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-slate-800">Get routine health check-ups once a year</span>
             </div>
           </div>
         {% endif %}
       </div>
 
-      <!-- Mandatory Disclaimer -->
-      <div class="bg-orange-50 border-2 border-orange-300 rounded-3xl p-8 sm:p-12 mb-10 result-card">
-        <div class="flex items-start gap-4">
-          <svg class="w-10 h-10 text-orange-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-          </svg>
-          <div class="flex-1">
-            <h3 class="text-2xl font-bold text-orange-900 mb-4">⚠️ Important Medical Disclaimer</h3>
-            <p class="text-base text-orange-900 leading-relaxed mb-4">
-              <strong>This system provides early screening guidance based on the health information you have entered.</strong> It is designed to support awareness and educational purposes only.
-            </p>
-            <p class="text-base text-orange-900 leading-relaxed mb-4">
-              <strong>This screening does NOT provide a medical diagnosis</strong> and should not replace professional medical advice, clinical evaluation, or laboratory testing. Type 1 Diabetes requires confirmatory testing including serological tests (autoantibodies), C-peptide measurement, and clinical assessment by qualified healthcare professionals.
-            </p>
-            <p class="text-base text-orange-900 leading-relaxed">
-              <strong>Users are strongly encouraged to consult a qualified healthcare professional</strong> for accurate diagnosis, interpretation of results, and appropriate treatment decisions. Early detection through professional screening and timely intervention are essential for optimal health outcomes.
+      <!-- 5. DOCTOR ADVICE -->
+      <div class="result-card bg-white rounded-3xl p-8 sm:p-12 mb-8 border border-slate-200">
+        <h2 class="text-2xl font-bold text-slate-800 mb-6">Doctor Advice</h2>
+        {% if result.risk_level == 'HIGH' %}
+          <div class="bg-red-50 border border-red-200 rounded-2xl p-6">
+            <p class="text-slate-800 text-lg font-semibold mb-2">⚠️ Important</p>
+            <p class="text-slate-800 text-lg leading-relaxed">
+              Strongly recommended to consult a doctor immediately for proper evaluation and guidance. Do not delay seeking medical attention.
             </p>
           </div>
+        {% elif result.risk_level == 'MODERATE' %}
+          <div class="bg-orange-50 border border-orange-200 rounded-2xl p-6">
+            <p class="text-slate-800 text-lg font-semibold mb-2">👨‍⚕️ Recommendation</p>
+            <p class="text-slate-800 text-lg leading-relaxed">
+              It is better to consult a doctor if symptoms appear or your health values remain elevated. A healthcare professional can help you manage your health better.
+            </p>
+          </div>
+        {% else %}
+          <div class="bg-green-50 border border-green-200 rounded-2xl p-6">
+            <p class="text-slate-800 text-lg font-semibold mb-2">✓ Good News</p>
+            <p class="text-slate-800 text-lg leading-relaxed">
+              Doctor visit is not required now. A regular yearly check-up is enough to maintain your health and catch any future concerns early.
+            </p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- 6. IMPORTANT NOTE -->
+      <div class="result-card bg-blue-50 rounded-3xl p-8 sm:p-12 mb-8 border border-blue-300">
+        <h2 class="text-2xl font-bold text-blue-900 mb-6">Important Note</h2>
+        <div class="bg-blue-100 rounded-2xl p-6 border border-blue-300">
+          <p class="text-blue-950 text-lg font-semibold mb-2">📋 Disclaimer</p>
+          <p class="text-blue-900 text-lg leading-relaxed">
+            This system is only for early risk screening. It is not a medical diagnosis. Please consult a healthcare professional for proper medical advice and diagnosis. Your doctor can provide personalized guidance based on your complete medical history.
+          </p>
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="{{ url_for('dashboard') }}" class="flex-1 sm:flex-initial px-8 py-4 bg-[#0F6C74] text-white font-bold text-lg rounded-xl hover:bg-[#084A52] transition-all duration-300 shadow-lg shadow-[#0F6C74]/20 text-center">
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mt-12 mb-8">
+        <a href="{{ url_for('dashboard') }}" class="flex-1 sm:flex-initial px-8 py-3 bg-[#0F6C74] text-white font-semibold rounded-lg hover:bg-[#084A52] transition-all duration-300 text-center">
           New Screening
         </a>
-        <a href="{{ url_for('landing') }}" class="flex-1 sm:flex-initial px-8 py-4 bg-slate-200 text-slate-700 font-bold text-lg rounded-xl hover:bg-slate-300 transition-all duration-300 text-center">
+        <a href="{{ url_for('landing') }}" class="flex-1 sm:flex-initial px-8 py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 transition-all duration-300 text-center">
           Home
         </a>
       </div>
+
     </div>
   </main>
 

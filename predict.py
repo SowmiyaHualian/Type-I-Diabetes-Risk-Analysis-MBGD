@@ -6,10 +6,12 @@ from typing import Dict, Tuple
 import joblib
 import numpy as np
 import pandas as pd
+from tensorflow import keras
 
 # Use absolute path based on the module location, not working directory
 MODULE_DIR = Path(__file__).parent
-MODEL_PATH = MODULE_DIR / "models" / "t1d_logreg_mb.pkl"
+ANN_MODEL_PATH = MODULE_DIR / "models" / "ann_model.h5"
+SCALER_PATH = MODULE_DIR / "models" / "feature_scaler.pkl"
 
 RISK_BUCKETS = [
     (0.7, "strong", "Multiple strong indicators associated with early signs of Type 1 Diabetes have been identified. This may require immediate medical attention."),
@@ -17,22 +19,28 @@ RISK_BUCKETS = [
     (0.0, "normal", "No significant indicators of Type 1 Diabetes have been identified based on the provided information."),
 ]
 
-_model_bundle = None
+_ann_model = None
+_scaler = None
 _model_mtime = None
 
 
 def load_model():
-    """Load the persisted joblib model once, reloading if file changes."""
-    global _model_bundle, _model_mtime
+    """Load the ANN model and feature scaler, reloading if file changes."""
+    global _ann_model, _scaler, _model_mtime
 
-    if not MODEL_PATH.exists():
-        return None
+    if not ANN_MODEL_PATH.exists():
+        return {"ann_model": None, "scaler": None}
 
-    mtime = MODEL_PATH.stat().st_mtime
-    if _model_bundle is None or _model_mtime != mtime:
-        _model_bundle = joblib.load(MODEL_PATH)
+    mtime = ANN_MODEL_PATH.stat().st_mtime
+    if _ann_model is None or _model_mtime != mtime:
+        # Load ANN model using Keras
+        _ann_model = keras.models.load_model(str(ANN_MODEL_PATH))
+        # Load feature scaler
+        if SCALER_PATH.exists():
+            _scaler = joblib.load(str(SCALER_PATH))
         _model_mtime = mtime
-    return _model_bundle
+    
+    return {"ann_model": _ann_model, "scaler": _scaler}
 
 
 def bucket_risk(probability: float) -> Tuple[str, str]:
@@ -128,27 +136,97 @@ def _map_payload_to_features(payload: Dict) -> Tuple[np.ndarray, Dict[str, int]]
     return feature_vector, symptoms
 
 
+
+
+def _classify_glucose(glucose_level: float) -> str:
+    """Classify glucose level as Normal, Elevated, or High."""
+    if glucose_level < 120:
+        return "Normal"
+    elif glucose_level < 200:
+        return "Elevated"
+    else:
+        return "High"
+
+
+def _classify_ketones(ketone_flag: int) -> str:
+    """Classify ketones as Normal (0) or Elevated/High (1)."""
+    return "Elevated" if ketone_flag == 1 else "Normal"
+
+
+def _classify_bmi(bmi: float) -> str:
+    """Classify BMI as Underweight, Normal, or Overweight."""
+    if bmi < 18.5:
+        return "Underweight"
+    elif bmi < 25:
+        return "Normal"
+    else:
+        return "Overweight"
+
+
+def _generate_medical_interpretation(glucose_class: str, ketone_class: str, bmi_class: str) -> str:
+    """Generate a single medical interpretation line based on glucose and ketone levels."""
+    
+    # CASE 1: High glucose + Elevated ketones
+    if glucose_class == "High" and ketone_class == "Elevated":
+        return "High glucose with elevated ketone levels suggests abnormal glucose metabolism with a possible insulin deficiency pattern."
+    
+    # CASE 2: High glucose + Normal ketones
+    if glucose_class == "High" and ketone_class == "Normal":
+        return "Elevated blood glucose without ketone increase suggests hyperglycemia without significant ketone involvement."
+    
+    # CASE 3: Elevated glucose + Elevated ketones
+    if glucose_class == "Elevated" and ketone_class == "Elevated":
+        return "Moderately elevated glucose and ketone levels indicate early metabolic imbalance requiring monitoring."
+    
+    # CASE 4: Normal glucose + Elevated ketones
+    if glucose_class == "Normal" and ketone_class == "Elevated":
+        return "Normal glucose with elevated ketones may indicate metabolic stress or dietary-related ketone production."
+    
+    # CASE 5: Normal glucose + Normal ketones
+    if glucose_class == "Normal" and ketone_class == "Normal":
+        return "Glucose and ketone levels are within normal limits, indicating stable metabolic condition."
+    
+    # CASE 6: High/Elevated glucose + Overweight BMI
+    if glucose_class in ("High", "Elevated") and bmi_class == "Overweight":
+        return "Elevated glucose along with higher BMI suggests a possible metabolic risk pattern."
+    
+    # DEFAULT CASE 7
+    return "Parameter combination indicates mild metabolic variation; continued monitoring is recommended."
+
+
+def _map_risk_level(risk_label: str) -> str:
+    """Map old risk labels to new clean format: strong->HIGH, moderate->MODERATE, normal->LOW."""
+    mapping = {
+        "strong": "HIGH",
+        "moderate": "MODERATE",
+        "normal": "LOW"
+    }
+    return mapping.get(risk_label, "LOW")
+
+
 def predict_risk(payload: Dict) -> Dict:
-    model_bundle = load_model()
+    models = load_model()
+    ann_model = models.get("ann_model")
+    scaler = models.get("scaler")
     feature_vector, symptoms = _map_payload_to_features(payload)
 
     probability: float
 
-    if model_bundle:
+    if ann_model is not None:
         try:
-            weights = np.asarray(model_bundle.get("weights"))
-            bias = float(model_bundle.get("bias", 0))
-            scaler = model_bundle.get("scaler", {})
-            numeric_indices = scaler.get("numeric_indices", [])
-            mean = np.asarray(scaler.get("mean", []))
-            std = np.asarray(scaler.get("std", []))
-
-            if len(mean) and len(std) and len(numeric_indices):
-                feature_vector[numeric_indices] = (feature_vector[numeric_indices] - mean) / std
-
-            logit = float(feature_vector @ weights + bias)
-            probability = float(1 / (1 + np.exp(-logit)))
-        except Exception:
+            # Scale features if scaler is available
+            X = feature_vector.copy().astype(np.float32)
+            if scaler is not None:
+                mean = scaler.get("mean", None)
+                std = scaler.get("std", None)
+                if mean is not None and std is not None:
+                    X = (X - mean) / std
+            
+            # Use ANN model for prediction
+            X_input = np.array([X], dtype=np.float32)
+            prediction = ann_model.predict(X_input, verbose=0)
+            probability = float(prediction[0][0])
+        except Exception as e:
             probability = _heuristic_probability({
                 "glucose_level": feature_vector[3],
                 "hba1c": feature_vector[4],
@@ -167,11 +245,30 @@ def predict_risk(payload: Dict) -> Dict:
             "c_peptide_level": feature_vector[11],
         })
 
-    risk_level, recommendation = bucket_risk(probability)
+    # Get old risk level and map to new format
+    old_risk_label, _ = bucket_risk(probability)
+    risk_level = _map_risk_level(old_risk_label)
+
+    # Extract vital parameters
+    glucose_level = feature_vector[3]  # Index 3 is glucose_level
+    ketone_flag = int(feature_vector[6]) if len(feature_vector) > 6 else 0  # Polyuria as proxy for ketones
+    bmi = feature_vector[2]  # Index 2 is BMI
+
+    # Classify parameters
+    glucose_class = _classify_glucose(glucose_level)
+    ketone_class = _classify_ketones(ketone_flag)
+    bmi_class = _classify_bmi(bmi)
+
+    # Generate medical interpretation
+    medical_interpretation = _generate_medical_interpretation(glucose_class, ketone_class, bmi_class)
 
     return {
         "risk_level": risk_level,
-        "probability": probability,
-        "recommendation": recommendation,
-        "used_model": bool(model_bundle is not None),
+        "confidence": probability,
+        "glucose": glucose_class,
+        "ketones": ketone_class,
+        "bmi": bmi_class,
+        "medical_interpretation": medical_interpretation,
+        "disclaimer": "This system is for risk screening only and not a medical diagnosis.",
+        "used_model": "ANN" if ann_model is not None else "Heuristic",
     }
