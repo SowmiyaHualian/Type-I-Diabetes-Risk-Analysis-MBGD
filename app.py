@@ -399,12 +399,6 @@ def admin_export_records():
     return jsonify(result)
 
 
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(url_for("landing"))
-
-
 def main():
     # Get port from environment variable (for Render deployment) or find free port (local development)
     port = int(os.getenv("PORT", find_free_port()))
