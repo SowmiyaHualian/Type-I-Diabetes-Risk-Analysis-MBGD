@@ -9,9 +9,10 @@ from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
-from flask import Flask, redirect, render_template, render_template_string, request, session, url_for
+from flask import Flask, redirect, render_template, render_template_string, request, session, url_for, jsonify
 
 from predict import predict_risk
+from admin import load_users_data, load_patient_records, export_to_csv, get_admin_stats, create_admin_html
 
 # Use absolute paths based on the module location
 APP_DIR = Path(__file__).parent
@@ -347,6 +348,55 @@ def view_records():
                 """,
                 table=table_html,
         )
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("landing"))
+
+
+# ===== ADMIN PANEL ROUTES =====
+@app.route("/admin")
+def admin_dashboard():
+    """Admin dashboard to view all records"""
+    return create_admin_html()
+
+
+@app.route("/api/admin/stats")
+def admin_stats():
+    """Get admin statistics"""
+    return jsonify(get_admin_stats())
+
+
+@app.route("/api/admin/users")
+def admin_users():
+    """Get all users"""
+    users = load_users_data()
+    return jsonify(users)
+
+
+@app.route("/api/admin/records")
+def admin_records():
+    """Get all patient records"""
+    records = load_patient_records()
+    return jsonify(records)
+
+
+@app.route("/api/admin/export/users", methods=["GET"])
+def admin_export_users():
+    """Export users to CSV"""
+    users = load_users_data()
+    result = export_to_csv(users, "users", "users")
+    return jsonify(result)
+
+
+@app.route("/api/admin/export/records", methods=["GET"])
+def admin_export_records():
+    """Export patient records to CSV"""
+    records = load_patient_records()
+    result = export_to_csv(records, "patient_records", "patient records")
+    return jsonify(result)
 
 
 @app.route("/logout")
