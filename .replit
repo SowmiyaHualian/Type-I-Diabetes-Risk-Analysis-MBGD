@@ -1,0 +1,28 @@
+run = "python app.py"
+modules = ["python-3.11"]
+
+[env]
+REPLIT_ENVIRONMENT = "true"
+FLASK_ENV = "production"
+
+[ports]
+8000 = {
+  host = "127.0.0.1"
+  scheme = "http"
+}
+
+[unitTest]
+language = "python3"
+
+[packager]
+language = "python3"
+ignoredPackages = ["unit_tests"]
+
+[languages.python3]
+pattern = "**/*.py"
+
+[debugger]
+support = false
+
+[nix]
+channel = "stable-23_11"
