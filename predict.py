@@ -103,6 +103,10 @@ def _map_payload_to_features(payload: Dict) -> Tuple[np.ndarray, Dict[str, int]]
         family_history_raw = payload.get("family_history")
     family_history = encode_yes_no(family_history_raw)
 
+    # Extract ketone presence from form (NOT the same as a symptom)
+    ketone_presence_raw = str(payload.get("ketonePresence", "Absent")).strip().lower()
+    ketones_present = 1 if ketone_presence_raw.startswith("p") else 0  # "Present" or "Positive" = 1, "Absent" = 0
+
     symptoms = {
         "polyuria": str(payload.get("symptoms.polyuria", "false")).lower() in {"true", "1", "on", "yes"},
         "polydipsia": str(payload.get("symptoms.polydipsia", "false")).lower() in {"true", "1", "on", "yes"},
@@ -133,7 +137,7 @@ def _map_payload_to_features(payload: Dict) -> Tuple[np.ndarray, Dict[str, int]]
         ],
         dtype=float,
     )
-    return feature_vector, symptoms
+    return feature_vector, symptoms, ketones_present
 
 
 
@@ -208,7 +212,7 @@ def predict_risk(payload: Dict) -> Dict:
     models = load_model()
     ann_model = models.get("ann_model")
     scaler = models.get("scaler")
-    feature_vector, symptoms = _map_payload_to_features(payload)
+    feature_vector, symptoms, ketones_present = _map_payload_to_features(payload)
 
     probability: float
 
@@ -251,7 +255,7 @@ def predict_risk(payload: Dict) -> Dict:
 
     # Extract vital parameters
     glucose_level = feature_vector[3]  # Index 3 is glucose_level
-    ketone_flag = int(feature_vector[6]) if len(feature_vector) > 6 else 0  # Polyuria as proxy for ketones
+    ketone_flag = ketones_present  # Use actual ketone presence from form, NOT polyuria
     bmi = feature_vector[2]  # Index 2 is BMI
 
     # Classify parameters
