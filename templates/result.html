@@ -3,10 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Result - Early Risk Analysis</title>
+    <title>Result - Type 1 Diabetes Risk Assessment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     <style>
+      .risk-card-no-risk {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(34, 197, 94, 0.05));
+        border-color: #10B981;
+      }
+      .risk-card-moderate {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(251, 191, 36, 0.05));
+        border-color: #F59E0B;
+      }
+      .risk-card-high {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(249, 115, 115, 0.05));
+        border-color: #EF4444;
+      }
       .animate-fade-in {
         animation: fadeIn 0.5s ease-in forwards;
         opacity: 0;
@@ -18,68 +30,148 @@
     </style>
   </head>
   <body class="bg-[#F5F7F8] min-h-screen">
-    <header class="bg-[#083A40] text-white shadow-sm">
+    <header class="bg-[#083A40] text-white shadow-sm sticky top-0 z-20">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <a href="{{ url_for('landing') }}" class="font-semibold">Early Risk Analysis</a>
-        <div class="flex items-center gap-3">
-          <a href="{{ url_for('dashboard') }}" class="px-3 py-2 rounded-lg bg-white text-[#0F6C74] font-semibold">Back to dashboard</a>
-          <a href="{{ url_for('logout') }}" class="px-3 py-2 rounded-lg bg-white text-[#0F6C74] font-semibold">Logout</a>
+        <a href="{{ url_for('landing') }}" class="font-semibold flex items-center gap-2">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+          Early Risk Analysis
+        </a>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a href="{{ url_for('index') }}" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition-colors">New Assessment</a>
+          <a href="{{ url_for('dashboard') }}" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition-colors">Dashboard</a>
+          <a href="{{ url_for('logout') }}" class="px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm transition-colors">Logout</a>
         </div>
       </div>
     </header>
 
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div class="bg-white border border-slate-200 rounded-2xl shadow-soft p-6 lg:p-8 space-y-6">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Result</p>
-            <h1 class="text-2xl font-bold text-[#083A40]">Model Output</h1>
+      {% if result %}
+        <!-- Risk Level Card with Color Coding -->
+        <div class="mb-8 animate-fade-in">
+          {% set risk_class = {
+            'No Risk': 'risk-card-no-risk',
+            'Moderate': 'risk-card-moderate',
+            'High': 'risk-card-high'
+          }.get(result.risk_level, 'risk-card-moderate') %}
+          
+          {% set risk_icon = {
+            'No Risk': '✅',
+            'Moderate': '⚠️',
+            'High': '⛔'
+          }.get(result.risk_level, '⚠️') %}
+
+          <div class="bg-white border-2 {{ risk_class }} rounded-3xl shadow-lg p-8 flex items-center gap-6">
+            <div class="text-6xl">{{ risk_icon }}</div>
+            <div>
+              <p class="text-xs font-semibold text-slate-600 uppercase tracking-wide">Risk Assessment Result</p>
+              <h1 class="text-4xl font-bold text-slate-900 mt-2">{{ result.risk_level }}</h1>
+              <p class="text-slate-700 mt-3 text-lg leading-relaxed max-w-md">
+                {% if result.risk_level == 'No Risk' %}
+                  Low likelihood of Type 1 Diabetes based on your current health metrics.
+                {% elif result.risk_level == 'Moderate' %}
+                  Moderate likelihood of Type 1 Diabetes. Medical evaluation recommended.
+                {% else %}
+                  High likelihood of Type 1 Diabetes. Urgent medical consultation recommended.
+                {% endif %}
+              </p>
+            </div>
           </div>
-          <span class="px-3 py-1 rounded-full bg-[#083A40]/10 text-[#083A40] text-xs font-semibold">JSON response rendered</span>
-        </div>
-        {% if result %}
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="p-4 rounded-xl bg-[#0F6C74]/5 border border-[#0F6C74]/20">
-            <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Risk level</p>
-            <p class="text-2xl font-bold text-[#083A40]">{{ result.risk_level }}</p>
-          </div>
-          <div class="p-4 rounded-xl bg-[#3AB8C1]/5 border border-[#3AB8C1]/20">
-            <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Probability</p>
-            <p class="text-2xl font-bold text-[#0F6C74]">{{ (result.probability * 100) | round(1) }}%</p>
-          </div>
-          <div class="p-4 rounded-xl bg-slate-100 border border-slate-200">
-            <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Model used</p>
-            <p class="text-2xl font-bold text-[#083A40]">{{ 'Yes' if result.used_model else 'Fallback' }}</p>
-          </div>
-        </div>
-        <div class="p-4 rounded-xl bg-white border border-slate-200">
-          <p class="text-xs font-semibold text-[#0F6C74] uppercase tracking-wide">Recommendation</p>
-          <p class="mt-2 text-slate-700 leading-relaxed">{{ result.recommendation }}</p>
         </div>
 
-        <!-- Abnormal Parameters Flagged Section -->
+        <!-- Key Metrics -->
+        <div class="grid md:grid-cols-4 gap-4 mb-8">
+          <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-soft">
+            <p class="text-xs font-semibold text-slate-600 uppercase tracking-wide">Confidence</p>
+            <p class="text-3xl font-bold text-[#0F6C74] mt-3">{{ (result.probability * 100) | round(1) }}%</p>
+            <p class="text-sm text-slate-600 mt-2">Model certainty</p>
+          </div>
+          <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-soft">
+            <p class="text-xs font-semibold text-slate-600 uppercase tracking-wide">Glucose Class</p>
+            <p class="text-2xl font-bold text-slate-900 mt-3">{{ result.glucose_class or '—' }}</p>
+            <p class="text-sm text-slate-600 mt-2">Blood glucose level</p>
+          </div>
+          <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-soft">
+            <p class="text-xs font-semibold text-slate-600 uppercase tracking-wide">BMI Class</p>
+            <p class="text-2xl font-bold text-slate-900 mt-3">{{ result.bmi_class or '—' }}</p>
+            <p class="text-sm text-slate-600 mt-2">Body mass index</p>
+          </div>
+          <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-soft">
+            <p class="text-xs font-semibold text-slate-600 uppercase tracking-wide">Model Used</p>
+            <p class="text-2xl font-bold text-slate-900 mt-3">{{ 'ANN' if result.used_model else 'Fallback' }}</p>
+            <p class="text-sm text-slate-600 mt-2">Prediction model</p>
+          </div>
+        </div>
+
+        <!-- Recommendation Card -->
+        <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-8 mb-8">
+          <div class="flex items-start gap-4">
+            <svg class="w-8 h-8 text-blue-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zm-11-1a1 1 0 100-2 1 1 0 000 2zm3 0a1 1 0 100-2 1 1 0 000 2zm3 0a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+            </svg>
+            <div>
+              <h2 class="text-xl font-bold text-blue-900 mb-3">Recommendation</h2>
+              <p class="text-blue-800 leading-relaxed text-lg">{{ result.recommendation or 'Please consult with a qualified healthcare provider for professional medical advice.' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medical Interpretation -->
+        <div class="bg-slate-50 border-2 border-slate-200 rounded-xl p-8 mb-8">
+          <h2 class="text-xl font-bold text-slate-900 mb-4">Medical Interpretation</h2>
+          <p class="text-slate-700 leading-relaxed">
+            {{ result.medical_interpretation or 'Your health metrics have been analyzed using advanced machine learning models trained on clinical data. This assessment provides an indicative risk level based on patterns identified in your input data.' }}
+          </p>
+        </div>
+
+        <!-- Abnormal Parameters (if any) -->
         {% if result.abnormal_params and result.abnormal_params|length > 0 %}
-        <div class="mt-6 p-6 rounded-xl bg-red-50 border border-red-300">
-          <div class="flex items-start gap-3 mb-4">
-            <div class="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0">
-              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+        <div class="bg-amber-50 border-2 border-amber-300 rounded-xl p-8 mb-8">
+          <div class="flex items-start gap-4 mb-4">
+            <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
               </svg>
             </div>
-            <h3 class="text-lg font-bold text-red-700">⚠️ Abnormal Parameters Flagged</h3>
-          </div>
-          <div class="space-y-2">
-            {% for param in result.abnormal_params %}
-              <p class="text-red-800 font-semibold">• {{ param }}</p>
-            {% endfor %}
+            <div>
+              <h3 class="text-lg font-bold text-amber-900 mb-3">Parameters Outside Normal Range</h3>
+              <ul class="space-y-2 text-amber-800">
+                {% for param in result.abnormal_params %}
+                  <li class="flex items-start gap-2">
+                    <span class="text-amber-600 font-bold mt-1">•</span>
+                    <span>{{ param }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
           </div>
         </div>
         {% endif %}
 
-        {% else %}
-        <p>No result to display.</p>
-        {% endif %}
-      </div>
+        <!-- Disclaimer -->
+        <div class="bg-red-50 border-2 border-red-300 rounded-xl p-8">
+          <div class="flex items-start gap-4">
+            <svg class="w-8 h-8 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+            <div>
+              <h3 class="text-lg font-bold text-red-900 mb-2">Important Disclaimer</h3>
+              <p class="text-red-800 leading-relaxed mb-3">
+                <strong>This tool provides a screening indication only and is NOT a medical diagnosis.</strong>
+              </p>
+              <p class="text-red-800 leading-relaxed">
+                The results should not replace professional medical evaluation. If you have concerns about Type 1 Diabetes or any health condition, please consult with a qualified healthcare provider immediately for proper diagnosis, treatment, and medical advice.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      {% else %}
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-soft p-8 text-center">
+          <p class="text-slate-600 text-lg">No result to display.</p>
+        </div>
+      {% endif %}
     </main>
   </body>
 </html>
