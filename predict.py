@@ -14,8 +14,8 @@ ANN_MODEL_PATH = MODULE_DIR / "models" / "ann_model.h5"
 SCALER_PATH = MODULE_DIR / "models" / "feature_scaler.pkl"
 
 RISK_BUCKETS = [
-    (0.75, "strong", "Multiple strong indicators associated with early signs of Type 1 Diabetes have been identified. This may require immediate medical attention."),
-    (0.55, "moderate", "Some notable indicators related to Type 1 Diabetes have been observed. While this does not confirm any condition, monitoring is important."),
+    (0.80, "strong", "Multiple strong indicators associated with early signs of Type 1 Diabetes have been identified. This may require immediate medical attention."),
+    (0.65, "moderate", "Some notable indicators related to Type 1 Diabetes have been observed. While this does not confirm any condition, monitoring is important."),
     (0.0, "normal", "No significant indicators of Type 1 Diabetes have been identified based on the provided information."),
 ]
 
@@ -52,54 +52,69 @@ def bucket_risk(probability: float) -> Tuple[str, str]:
 
 def _heuristic_probability(features: Dict[str, float]) -> float:
     # Lightweight fallback when the joblib model file is missing.
-    score = 0.0
+    # IMPORTANT: Be VERY conservative with predictions to avoid false alarms
+    # Baseline is negative because most people are healthy (Type 1 is rare)
+    score = -1.5  # Start with negative baseline (Type 1 is uncommon)
     
     # Glucose: normal up to 125 is good
     glucose = features["glucose_level"]
     if glucose > 200:
-        score += 0.8
+        score += 1.2
+    elif glucose > 180:
+        score += 0.9
     elif glucose > 160:
-        score += 0.6
-    elif glucose > 130:
-        score += 0.3
+        score += 0.7
+    elif glucose > 140:
+        score += 0.5
     elif glucose > 125:
-        score += 0.1
-    # else normal, no score
+        score += 0.2
+    # else <= 125, no additional score (normal fasting)
     
     # HbA1c: normal is < 5.7
     hba1c = features["hba1c"]
-    if hba1c > 8.0:
-        score += 0.7
+    if hba1c > 9.0:
+        score += 1.0
+    elif hba1c > 8.0:
+        score += 0.8
+    elif hba1c > 7.0:
+        score += 0.6
     elif hba1c > 6.5:
-        score += 0.5
+        score += 0.4
     elif hba1c > 5.7:
         score += 0.2
-    # else normal, no score
+    # else < 5.7, no score (normal)
     
-    # BMI: less weight than other factors
+    # BMI: less weight than metabolic factors
     bmi = features["bmi"]
-    if bmi > 35:
+    if bmi > 40:
         score += 0.2
+    elif bmi > 35:
+        score += 0.15
     elif bmi > 30:
         score += 0.1
     # else normal, no score
     
-    # Family history: significant indicator
+    # Family history: significant but not conclusive alone
     if str(features["family_history"]).lower().startswith("y"):
         score += 0.5
     
-    # Autoantibodies: very strong indicator
+    # Autoantibodies: very strong indicator of Type 1
     if str(features["autoantibody_presence"]).lower().startswith("p"):
-        score += 0.7
+        score += 0.8
     
     # C-peptide: low c-peptide suggests beta cell dysfunction
+    # BUT ONLY if it was actually provided (not 0)
     c_peptide = features["c_peptide_level"]
-    if c_peptide < 0.8:
-        score += 0.4
-    elif c_peptide < 1.1:
-        score += 0.1
-    # else normal, no score
+    if c_peptide > 0:  # Only if provided
+        if c_peptide < 0.5:
+            score += 0.7
+        elif c_peptide < 0.8:
+            score += 0.4
+        elif c_peptide < 1.1:
+            score += 0.1
+        # else normal, no score
     
+    # Convert score to probability using logistic function
     prob = float(1 / (1 + np.exp(-score)))
     return min(max(prob, 0.0), 1.0)
 
