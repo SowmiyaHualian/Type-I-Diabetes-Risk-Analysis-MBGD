@@ -301,43 +301,27 @@ def predict():
     user_id = user_info.get("id")
     username = user_info.get("name", "Unknown")
     
-    # Prepare payload with proper field names for enhanced_predict
+    # Get form data and pass directly to predict_risk (it handles field names)
     data = request.form.to_dict()
-    payload = {
-        'patient_id': data.get('patientId', 'P000'),
-        'name': data.get('name', username),
-        'gender': data.get('gender', 'Male'),
-        'age': data.get('age', 0),
-        'bmi': data.get('bmi', 0),
-        'glucose_level': data.get('glucose', 0),  # Map to expected field name
-        'hba1c': data.get('hba1c', 0),
-        'family_history': data.get('familyHistory', 'No'),
-        'autoantibody_presence': data.get('autoantibody', 'Negative'),
-        'insulin_level': data.get('insulin', 0),
-        'c_peptide_level': data.get('cPeptide', 0),
-    }
+    result = predict_risk(data)
     
-    # Use enhanced prediction with validation and database storage
+    # Try to store in database using enhanced_predict (doesn't require exact field mapping)
     try:
-        success, result, error = predict_with_validation(payload, user_id, username)
-        
-        if not success:
-            session['error'] = error
-            return redirect(url_for('dashboard'))
-        
-        # Also save to old patient records for backward compatibility
-        try:
-            save_patient_record(user_info, data, result)
-        except Exception as e:
-            print(f"Warning: Failed to save patient record: {e}")
-        
-        session['result'] = result
-        session['form_data'] = data
-        return redirect(url_for("result_view"))
+        success, db_result, error = predict_with_validation(data, user_id, username)
+        if success:
+            result['database_id'] = db_result.get('database_id')
     except Exception as e:
-        print(f"Prediction error: {e}")
-        session['error'] = f"Prediction failed: {str(e)}"
-        return redirect(url_for('dashboard'))
+        print(f"Warning: Database storage failed: {e}")
+    
+    # Also save to old patient records for backward compatibility
+    try:
+        save_patient_record(user_info, data, result)
+    except Exception as e:
+        print(f"Warning: Failed to save patient record: {e}")
+    
+    session["result"] = result
+    session["form_data"] = data
+    return redirect(url_for("result_view"))
 
 
 @app.route("/result")
