@@ -12,12 +12,21 @@ import pandas as pd
 from flask import Flask, redirect, render_template, render_template_string, request, session, url_for, jsonify
 
 from predict import predict_risk
+from validation import validate_input
+from enhanced_predict import predict_with_validation
+from database import get_db, init_database
 from admin import load_users_data, load_patient_records, export_to_csv, get_admin_stats, create_admin_html
 
 # Use absolute paths based on the module location
 APP_DIR = Path(__file__).parent
 app = Flask(__name__, static_folder=str(APP_DIR / "frontend"), template_folder=str(APP_DIR / "frontend"))
 app.secret_key = os.getenv("SECRET_KEY", "secret123")  # Use environment variable in production
+
+# Initialize database
+try:
+    init_database()
+except Exception as e:
+    print(f"Warning: Failed to initialize database: {e}")
 
 
 def find_free_port() -> int:
@@ -287,16 +296,48 @@ def dashboard():
 def predict():
     if not require_login():
         return redirect(url_for("login"))
+    
+    user_info = session.get("user", {})
+    user_id = user_info.get("id")
+    username = user_info.get("name", "Unknown")
+    
+    # Prepare payload with proper field names for enhanced_predict
     data = request.form.to_dict()
-    result = predict_risk(data)
+    payload = {
+        'patient_id': data.get('patientId', 'P000'),
+        'name': data.get('name', username),
+        'gender': data.get('gender', 'Male'),
+        'age': data.get('age', 0),
+        'bmi': data.get('bmi', 0),
+        'glucose_level': data.get('glucose', 0),  # Map to expected field name
+        'hba1c': data.get('hba1c', 0),
+        'family_history': data.get('familyHistory', 'No'),
+        'autoantibody_presence': data.get('autoantibody', 'Negative'),
+        'insulin_level': data.get('insulin', 0),
+        'c_peptide_level': data.get('cPeptide', 0),
+    }
+    
+    # Use enhanced prediction with validation and database storage
     try:
-        save_patient_record(session.get("user", {}), data, result)
-    except Exception as exc:
-        # Fail gracefully so prediction flow continues even if logging encounters an issue
-        print(f"Failed to save patient record: {exc}")
-    session["result"] = result
-    session["form_data"] = data
-    return redirect(url_for("result_view"))
+        success, result, error = predict_with_validation(payload, user_id, username)
+        
+        if not success:
+            session['error'] = error
+            return redirect(url_for('dashboard'))
+        
+        # Also save to old patient records for backward compatibility
+        try:
+            save_patient_record(user_info, data, result)
+        except Exception as e:
+            print(f"Warning: Failed to save patient record: {e}")
+        
+        session['result'] = result
+        session['form_data'] = data
+        return redirect(url_for("result_view"))
+    except Exception as e:
+        print(f"Prediction error: {e}")
+        session['error'] = f"Prediction failed: {str(e)}"
+        return redirect(url_for('dashboard'))
 
 
 @app.route("/result")
