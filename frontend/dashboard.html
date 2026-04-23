@@ -218,16 +218,22 @@
               </div>
 
               <div>
-                <label for="familyHistory" class="block text-sm font-semibold text-[#083A40] mb-2">Family History of Type 1 Diabetes</label>
+                <label for="familyHistory" class="block text-sm font-semibold text-[#083A40] mb-2">
+                  Family History of Type 1 Diabetes
+                  <span class="text-red-500">*</span>
+                </label>
                 <select
                   id="familyHistory"
                   name="familyHistory"
                   class="w-full px-5 py-4 rounded-xl border text-lg border-slate-300 bg-slate-50 text-[#083A40] focus:outline-none focus:ring-2 focus:ring-[#0F6C74] focus:border-transparent transition-all"
+                  onchange="validateFamilyHistory(); updateFormValidation();"
+                  onblur="validateFamilyHistory();"
                 >
                   <option value="" disabled selected>Select an option</option>
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>
                 </select>
+                <p data-error="familyHistory" class="text-red-500 text-sm mt-1 hidden font-semibold">Please select Yes or No for family history</p>
                 <p class="text-xs text-slate-500 mt-2">Simple yes/no for hereditary history to keep inputs clear.</p>
               </div>
             </div>
@@ -381,6 +387,39 @@
       }
 
       /**
+       * Validate family history field
+       */
+      function validateFamilyHistory() {
+        const familyHistorySelect = document.getElementById('familyHistory');
+        const errorEl = document.querySelector('[data-error="familyHistory"]');
+        
+        if (!familyHistorySelect.value) {
+          errorEl.classList.remove('hidden');
+          familyHistorySelect.classList.add('border-red-500', 'bg-red-50');
+          familyHistorySelect.classList.remove('border-slate-300', 'bg-slate-50');
+          return false;
+        } else {
+          errorEl.classList.add('hidden');
+          familyHistorySelect.classList.remove('border-red-500', 'bg-red-50');
+          familyHistorySelect.classList.add('border-slate-300', 'bg-slate-50');
+          return true;
+        }
+      }
+
+      /**
+       * Update overall form validation state
+       */
+      function updateFormValidation() {
+        const isGlucoseValid = validateGlucoseFields();
+        const isFamilyHistoryValid = validateFamilyHistory();
+        const submitBtn = document.querySelector('button[type="submit"]');
+        
+        if (submitBtn) {
+          submitBtn.disabled = !(isGlucoseValid && isFamilyHistoryValid);
+        }
+      }
+
+      /**
        * Validate glucose fields on form submission
        * Ensures correct fields are filled based on user's glucose test type selection
        */
@@ -449,11 +488,17 @@
         const form = document.getElementById('dashboard-form');
         if (form) {
           form.addEventListener('submit', function(e) {
-            if (!validateGlucoseFields()) {
+            const isGlucoseValid = validateGlucoseFields();
+            const isFamilyHistoryValid = validateFamilyHistory();
+            
+            if (!isGlucoseValid || !isFamilyHistoryValid) {
               e.preventDefault();
               return false;
             }
           });
+          
+          // Initial validation state
+          updateFormValidation();
         }
 
         // Attach clear button handler to reset glucose selection
